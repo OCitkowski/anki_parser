@@ -1,0 +1,53 @@
+#separator:tab
+#html:true
+#tags column:6
+beginnen	beginnt	begann	hat begonnen	1. начинать 2. приступать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+bitten	bittet	bat	hat gebeten	просить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+bleiben	bleibt	blieb	ist geblieben	оставаться	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+bringen	bringt	brachte	hat gebracht	приносить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+dürfen	darf	durfte	hat gedurft	мочь (по разрешению)	A1 Modalverb unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+essen	isst	aß	hat gegessen	есть	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+fahren	fährt	fuhr	hat / ist gefahren	ехать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+fallen	fällt	fiel	ist gefallen	падать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+fangen	fängt	fing	hat gefangen	1. ловить 2. поймать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+finden	findet	fand	hat gefunden	находить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+fliegen	fliegt	flog	hat / ist geflogen	лететь	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+geben	gibt	gab	hat gegeben	давать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+gehen	geht	ging	ist gegangen	идти	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+gewinnen	gewinnt	gewann	hat gewonnen	выигрывать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+haben	hat	hatte	hat gehabt	иметь	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+halten	hält	hielt	hat gehalten	1. держать 2. останавливаться	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+heißen	heißt	hieß	hat geheißen	1. называть 2. называться	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+helfen	hilft	half	hat geholfen	помогать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+kennen	kennt	kannte	hat gekannt	знать (человека)	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+kommen	kommt	kam	ist gekommen	приходить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+können	kann	konnte	hat gekonnt	1. мочь 2. уметь	A1 Modalverb unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+laden	lädt	lud	hat geladen	1. грузить 2. приглашать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+laufen	läuft	lief	ist gelaufen	бегать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+lesen	liest	las	hat gelesen	читать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+liegen	liegt	lag	hat gelegen	лежать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+mögen	mag	mochte	hat gemocht	1. любить 2. нравиться&nbsp;	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+müssen	muss	musste	hat gemusst	1. быть должным, 2. быть вынужденным	A1 Modalverb unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+nehmen	nimmt	nahm	hat genommen	брать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+riechen	riecht	roch	hat gerochen	1. пахнуть 2. нюхать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+rufen	ruft	rief	hat gerufen	1. кричать 2. звать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+scheinen	scheint	schien	hat geschienen	1. светить 2. казаться	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+schlafen	schläft	schlief	hat geschlafen	спать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+schließen	schließt	schloss	hat geschlossen	закрыть	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+schreiben	schreibt	schrieb	hat geschrieben	писать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+schwimmen	schwimmt	schwamm	hat/ ist geschwommen	плавать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+sehen	sieht	sah	hat gesehen	1. смотреть 2. видеть	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+sein	ist	war	ist gewesen	быть	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+sitzen	sitzt	saß	hat gesessen	сидеть	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+sprechen	spricht	sprach	hat gesprochen	говорить, разговаривать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+stehen	steht	stand	hat gestanden	стоять	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+steigen	steigt	stieg	ist gestiegen	подниматься	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+treffen	trifft	traf	hat getroffen	встретить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+trinken	trinkt	trank	hat getrunken	пить	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+tun	tut	tat	hat getan	делать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+werden	wird	wurde	ist geworden	стать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+wissen	weiß	wusste	hat gewusst	знать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+ziehen	zieht	zog	hat / ist gezogen	тоскать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+sollen	soll	sollte	hat gesollt	1. быть должным 2. быть обязанным	A1 Modalverb unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+wollen	will	wollte	hat gewollt	хотеть	A1 Modalverb unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
+weisen	weist	wies	hat gewiesen	показывать	A1 unregelmäßige_Verben unregelmäßige_Verben::A1 Verben
