@@ -5,14 +5,18 @@ from os import path
 import argparse
 
 
-def fill_words_count_from_file(file_with_data):
+def fill_words_count_from_file(file_with_data, lower_word=False):
     words_count = {}
 
     for line in file_with_data:
 
         words = set(line.split())
         for word in words:
-            word = word.translate({ord(i): None for i in '‚‘«»123“,.„–"[]?()!<>~@#$%^&*()_+=-1234567890;:…'}).lower()
+
+            word = word.translate({ord(i): None for i in '‚‘«»123“,.„–"[]?()!<>~@#$%^&*()_+=-1234567890;:…'})
+            if lower_word:
+                word = word.lower()
+
             word = word.replace("'", '')
             if 'http//' in word:
                 continue
@@ -54,7 +58,7 @@ if __name__ == '__main__':
 
     if path.isfile(DataFile):
         file_with_data = open(DataFile, "rt")
-        words_count_sort = fill_words_count_from_file(file_with_data)
+        words_count_sort = fill_words_count_from_file(file_with_data, lower_word=False)
 
         path_to_file_result = OutputFile
 
