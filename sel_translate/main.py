@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 
+from selenium.webdriver.support.wait import WebDriverWait
+
 from selenium.webdriver.common.by import By
 
 from selenium.common.exceptions import NoSuchElementException
@@ -29,7 +31,7 @@ class ChromeBrowser():
         self.__browser = None
         self.__chrome_options = Options()
         self._cookies_file_name = 'chrome'
-        self._cookies = 'None'
+        self.__open_cook_file = None
         self._json_file_name = 'chrome'
         self.__max_time_sleep = 0
         self.__min_time_sleep = 0
@@ -133,18 +135,21 @@ class ChromeBrowser():
         result = False
         try:
             self.__browser.delete_all_cookies()
-            cookies = json.load(open(f"{self._cookies_file_name}.cookies", "r"))
+            self.__open_cook_file = open(f"{self._cookies_file_name}.cookies", "r")
+            cookies = json.load(self.__open_cook_file)
             for cookie in cookies:
                 try:
                     self.__browser.add_cookie(cookie)
                     result = True
-                    print(cookie)
+                    # print(cookie)
                 except Exception as ex:
                     print(ex)
         except:
             self.__browser.refresh()
             result = False
         finally:
+
+            self.__open_cook_file.close()
             print(f'set cookies is {result}')
             return result
 
@@ -152,7 +157,8 @@ class ChromeBrowser():
         result = False
         try:
             print(self._cookies_file_name)
-            with open(self._cookies_file_name + '.cookies', 'w') as write_file:
+
+            with open(f"{self._cookies_file_name}.cookies", 'w') as write_file:
                 json.dump(self.__browser.get_cookies(), write_file, ensure_ascii=False)
                 result = True
             print(f'{self._cookies_file_name}.cookies save to root')
@@ -199,16 +205,15 @@ class ChromeBrowser():
         return exist
 
     def __close(self):
-        if self._cookies_file_name:
-            self.save_cookies_to_file()
+
         self.__browser.close()
 
 
 class TranslateBot(ChromeBrowser):
-    """Translatem Bot"""
+    """Translate Bot"""
     __type = "Translate"
 
-    def __init__(self, username, password, ):
+    def __init__(self, username, password):
         super().__init__()
         self.username = username
         self.password = password
@@ -222,6 +227,35 @@ class TranslateBot(ChromeBrowser):
             # self.__browser.refresh()
             self.sleep()
 
+    def put_word_to_element(self, word: str = None):
+        if word != None:
+            word_element = self.__browser.find_element(By.XPATH,
+                                                       '/ html / body / div[1] / div[2] / div / div[1] / div / form / input[1]')
+            word_element.clear()
+            self.__browser.refresh
+            self.sleep()
+
+            word_element.send_keys(word)
+            word_element.send_keys(Keys.ENTER)
+            self.sleep()
+
+    def find_elements_by_css(self, element_css_names: list) -> dict:
+        finded_elements = {}
+        seach_elements_head = self.__browser.find_element(By.CLASS_NAME, 'head')
+        for i in element_css_names:
+            try:
+                finded_elements[i] = seach_elements_head.find_element(By.CSS_SELECTOR, i).text
+            except:
+                print(f' this is css did not find - {i}')
+                finded_elements[i] = None
+            finally:
+                self.sleep()
+
+        for i, j in finded_elements.items():
+            print(i, j)
+
+        return finded_elements
+
 
 if __name__ == '__main__':
     # try:
@@ -231,6 +265,14 @@ if __name__ == '__main__':
     translate.set_times_sleep(hand_time_sleep=0, min_time_sleep=3, max_time_sleep=7)
     translate.chrome_options = CHROME_OPTIONS
     translate.open_by_word()
-    translate.set_times_sleep(hand_time_sleep=10)
-    # translate.del_cookies_browser()
+
+    element_class_names = (
+        "span.lex_ful_entr.l1", "span.lex_ful_pron", "span.lex_ful_morf",
+        "span.lex_ful_form")
+
+    translate.put_word_to_element('habe')
+    finded_elements = translate.find_elements_by_css(element_class_names)
+
+    translate.sleep()
+
     translate.save_cookies_to_file()

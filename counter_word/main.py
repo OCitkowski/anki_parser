@@ -28,7 +28,7 @@ def fill_words_count_from_file(file_with_data, lower_word=False):
     return words_count_sort
 
 
-def save_data_to_file(data, path_to_file_result):
+def save_data_to_file(data, path_to_file_result, div='|'):
     # "OutputFile.txt"
     if path_to_file_result == None:
         path_to_file_result = "OutputFile.txt"
@@ -40,7 +40,7 @@ def save_data_to_file(data, path_to_file_result):
 
     text = ''
     for i, j in data.items():
-        text += f'{i} -- {j}  \n'
+        text += f'{i}{div}{j}\n'
 
     result_f.write(text)
     result_f.close()
@@ -48,13 +48,17 @@ def save_data_to_file(data, path_to_file_result):
 
 if __name__ == '__main__':
     descStr = "Python counter words in file txt . For usage enter in terminal  " \
-              "& python3 main.py -in_file 'Test_german.txt' -out_file 'new.txt'"
+              "&  python3 main.py -in_file 'txt/WannKommtDerWind.txt' -out_file 'new.txt' -div '|'"
     parser = argparse.ArgumentParser(description=descStr)
     parser.add_argument('-in_file', dest='DataFile', required=True)
     parser.add_argument('-out_file', dest='OutputFile', required=False)
+    parser.add_argument('-div', dest='Divider', required=True)
     args = parser.parse_args()
     DataFile = args.DataFile
     OutputFile = args.OutputFile
+    div = args.Divider
+
+    # print(DataFile, OutputFile, div)
 
     if path.isfile(DataFile):
         file_with_data = open(DataFile, "rt")
@@ -62,7 +66,7 @@ if __name__ == '__main__':
 
         path_to_file_result = OutputFile
 
-        save_data_to_file(words_count_sort, path_to_file_result)
+        save_data_to_file(words_count_sort, path_to_file_result, div)
 
         file_with_data.close()
         print(f'Ok')

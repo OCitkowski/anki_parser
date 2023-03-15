@@ -24,6 +24,11 @@ https://pypi.org/project/python-dotenv/
  
     pip install python-dotenv
 
+
+redis
+https://redis.readthedocs.io/en/latest/#getting-started    
+    pip install redis
+
 requirements
 
     pip freeze > requirements.txt 
