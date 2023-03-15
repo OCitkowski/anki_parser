@@ -17,6 +17,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from webdriver_manager.chrome import ChromeDriverManager
 from browser_options import CHROME_OPTIONS
+import redis
+
+r = redis.Redis()
+r.ping()
 
 load_dotenv()
 password = os.getenv("PASSWORD")
@@ -228,7 +232,7 @@ class TranslateBot(ChromeBrowser):
             self.sleep()
 
     def put_word_to_element(self, word: str = None):
-        if word != None:
+        if word != None and word != ' ':
             word_element = self.__browser.find_element(By.XPATH,
                                                        '/ html / body / div[1] / div[2] / div / div[1] / div / form / input[1]')
             word_element.clear()
@@ -236,43 +240,129 @@ class TranslateBot(ChromeBrowser):
             self.sleep()
 
             word_element.send_keys(word)
+            print(f'{word} ------')
             word_element.send_keys(Keys.ENTER)
             self.sleep()
 
-    def find_elements_by_css(self, element_css_names: list) -> dict:
+    def find_elements_by_css_old(self, element_css_names: list) -> dict:
         finded_elements = {}
-        seach_elements_head = self.__browser.find_element(By.CLASS_NAME, 'head')
+
+        try:
+            seach_elements_head = self.__browser.find_element(By.CLASS_NAME, 'head')
+        except:
+            return None
+
         for i in element_css_names:
             try:
                 finded_elements[i] = seach_elements_head.find_element(By.CSS_SELECTOR, i).text
             except:
-                print(f' this is css did not find - {i}')
+                # print(f'{i} this is css did not find - {i}')
                 finded_elements[i] = None
             finally:
                 self.sleep()
 
-        for i, j in finded_elements.items():
-            print(i, j)
+        # for i, j in finded_elements.items():
+        #     print(i, j)
+
+        return finded_elements
+
+    def find_elements_by_css(self, element_css_names: list) -> dict:
+        finded_elements = {}
+
+        for i in element_css_names:
+            try:
+                full_row = ''
+                elements = self.__browser.find_elements(By.CSS_SELECTOR, i)
+                for row in elements:
+                    full_row += f'{row.text}; '
+
+                finded_elements[i] = full_row
+            except:
+
+                finded_elements[i] = None
+            finally:
+                self.sleep()
+
+        return finded_elements
+
+    def find_elements_by_css_to_list(self, element_css_names: list) -> list:
+        finded_elements = []
+
+        for i in element_css_names:
+            try:
+                full_row = ''
+                elements = self.__browser.find_elements(By.CSS_SELECTOR, i)
+                for row in elements:
+                    full_row += f'{row.text}; '
+
+                finded_elements.append(full_row)
+            except:
+
+                finded_elements.append(' ')
+            finally:
+                self.sleep()
 
         return finded_elements
 
 
+def get_words_from_file(full_file_name: str = None) -> list:
+    words = []
+
+    if full_file_name == None:
+        return words
+
+    file_txt = open(full_file_name, "r+")
+
+    while True:
+        row = file_txt.readline()
+        if row == '':
+            break
+        else:
+            new_word = row.split("|")[0]
+            words.append(new_word)
+
+    # r1 = redis.Redis(db=1)
+    # r1.set(name='words', value=json.dumps(words))
+    # print(json.loads(r1.get('words')))
+    # return json.loads(r1.get('words'))
+    return words
+
+
 if __name__ == '__main__':
-    # try:
-    full_file_name = '_x.py'
+
     translate = TranslateBot(username=user_name, password=password)
     translate.cookies_file_name = user_name + '_translate'
-    translate.set_times_sleep(hand_time_sleep=0, min_time_sleep=3, max_time_sleep=7)
+    translate.set_times_sleep(hand_time_sleep=0, min_time_sleep=2, max_time_sleep=5)
     translate.chrome_options = CHROME_OPTIONS
     translate.open_by_word()
 
     element_class_names = (
-        "span.lex_ful_entr.l1", "span.lex_ful_pron", "span.lex_ful_morf",
+        "span.lex_ful_tran", "span.lex_ful_entr.l1", "span.lex_ful_pron", "span.lex_ful_morf",
         "span.lex_ful_form")
 
-    translate.put_word_to_element('habe')
-    finded_elements = translate.find_elements_by_css(element_class_names)
+    full_file_name = '/home/fox/PycharmProjects/anki_parser/counter_word/new.txt'
+    words_from_file = get_words_from_file(full_file_name)
+    # for i in words_from_file:
+    #     print(i)
 
-    translate.sleep()
+    file_tran = open("myfile.txt", "w")
 
+    for word in words_from_file:
+
+        translate.put_word_to_element(word)
+        # finded_elements = translate.find_elements_by_css(element_class_names)
+        finded_elements = translate.find_elements_by_css_to_list(element_class_names)
+        if finded_elements == None:
+            print(f'******** for {word} did not find **************')
+        else:
+            row = ''
+            for i in finded_elements:
+                row += f'{i} |'
+            file_tran.writelines(row)
+            file_tran.writelines('\n')
+            print(f'for {word} found - {finded_elements}')
+        # r.set(word, json.dumps(finded_elements))
+        # print(json.loads(r.get(word)))
+
+    file_tran.close()
     translate.save_cookies_to_file()
