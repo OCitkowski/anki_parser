@@ -1,4 +1,5 @@
 import os, time, random, json
+import logging
 
 from dotenv import load_dotenv
 
@@ -328,7 +329,21 @@ def get_words_from_file(full_file_name: str = None) -> list:
     return words
 
 
+def get_data_from_json_file(json_file_name):
+    try:
+        with open(json_file_name + '.json', 'r') as read_file:
+            template = json.load(read_file)
+            logging.info(f"{json_file_name}.json get data from json file")
+            words = (note['fields'][0] for note in template['notes'])
+    except:
+        logging.info(f"{json_file_name}.json don`t get data from json file")
+
+    return words
+
+
 if __name__ == '__main__':
+
+    logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
     translate = TranslateBot(username=user_name, password=password)
     translate.cookies_file_name = user_name + '_translate'
