@@ -38,6 +38,19 @@ def save_data_in_json_file(data, json_file_name):
     return result
 
 
+def get_data_from_json_file2(json_file_name):
+    try:
+        with open(json_file_name, 'r') as read_file:
+            template = json.load(read_file)
+            logging.info(f"{json_file_name}.json get data from json file")
+            # words = (i for i in template)
+            # print(template)
+    except:
+        logging.info(f"{json_file_name}.json don`t get data from json file")
+
+    return template
+
+
 if __name__ == '__main__':
     logging.basicConfig(filename='DEBUG.log', encoding='utf-8', level=logging.DEBUG)
     json_file_name = 'deck.json'
@@ -46,8 +59,13 @@ if __name__ == '__main__':
         if len(j[0].split(' ')) < 3:
             # print(i, j, len(j[0].split(' ')), in_der_die_das(j[0].split(' ')))
             data[j[3]] = [in_der_die_das(j[0].split(' ')), '*****', j[1], i, False]
+    #
+    # for x, y in data.items():
+    #     print(x, y)
+
+    save_data_in_json_file(data, json_file_name='data.json')
+
+    data = get_data_from_json_file2(json_file_name='data.json')
 
     for x, y in data.items():
         print(x, y)
-
-    save_data_in_json_file(data, json_file_name='data.json')
