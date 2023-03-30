@@ -67,6 +67,8 @@ def get_data_from_json_file2(json_file_name):
 
     return template
 
+
+
 def get_proxies_txt(filename):
     with open(filename + '.txt', 'r') as f:
 
@@ -76,6 +78,8 @@ def get_proxies_txt(filename):
         # Перетворюємо решту рядків з файлу на список проксі
         proxies = [line.strip() for line in lines if line.strip()]
     print(proxies)
+
+
 
 
 if __name__ == '__main__':
