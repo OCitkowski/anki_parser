@@ -38,8 +38,6 @@ def save_data_in_json_file(data, json_file_name):
     return result
 
 
-import json
-
 
 def update_row_in_json_file(id, row, json_file_name):
     # Відкрити файл xxx.json і зчитати дані в об'єкт Python
