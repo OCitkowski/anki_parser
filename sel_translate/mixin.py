@@ -1,0 +1,2 @@
+class JsonMixin():
+    pass

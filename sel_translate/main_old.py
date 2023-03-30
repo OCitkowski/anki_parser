@@ -401,3 +401,43 @@ def update_row_in_json_file(id, row, json_file_name):
 if __name__ == '__main__':
 
     logging.basicConfig(filename='_main.log', encoding='utf-8', datefmt='%Y-%m-%d_%H-%M-%S', level=logging.INFO)
+
+    translate = TranslateBot(username=user_name, password=password)
+    translate.cookies_file_name = user_name + '_translate'
+    translate.set_times_sleep(hand_time_sleep=0, min_time_sleep=1, max_time_sleep=2)
+    translate.chrome_options = CHROME_OPTIONS
+    translate.open_by_word()
+
+    element_class_names = (
+        "span.lex_ful_tran", "span.lex_ful_entr.l1", "span.lex_ful_pron", "span.lex_ful_morf",
+        "span.lex_ful_form")
+
+    data = get_data_from_json_file2(json_file_name='data.json')
+
+    i = 0
+    print(datetime.now())
+    for id, row in data.items():
+        print(i)
+        if row[4]:
+            continue
+        i += 1
+        if i > 1000:
+            break
+
+        translate.put_word_to_element(row[0])
+
+        finded_elements = translate.find_elements_by_css_to_list(element_class_names)
+
+        if finded_elements == None:
+
+            update_row_in_json_file(id, None, json_file_name='data.json')
+
+            logging.FATAL(f'for {row[0]} did not found - {finded_elements}')
+
+        else:
+            update_row_in_json_file(id, finded_elements, json_file_name='data.json')
+            logging.info(f'{i} + {datetime.now()}- for {row[0]} found - {finded_elements}')
+            print(finded_elements)
+
+    translate.save_cookies_to_file()
+    print(datetime.now())

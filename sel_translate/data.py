@@ -38,6 +38,23 @@ def save_data_in_json_file(data, json_file_name):
     return result
 
 
+import json
+
+
+def update_row_in_json_file(id, row, json_file_name):
+    # Відкрити файл xxx.json і зчитати дані в об'єкт Python
+    with open(json_file_name) as f:
+        data = json.load(f)
+
+    # Знайти стрічку, яку потрібно змінити, і замінити на нову
+    data[id][1] = row
+    data[id][4] = True
+
+    # Зберегти зміни в файл
+    with open(json_file_name, 'w') as f:
+        json.dump(data, f)
+
+
 def get_data_from_json_file2(json_file_name):
     try:
         with open(json_file_name, 'r') as read_file:
@@ -50,22 +67,37 @@ def get_data_from_json_file2(json_file_name):
 
     return template
 
+def get_proxies_txt(filename):
+    with open(filename + '.txt', 'r') as f:
+
+        lines = f.readlines()
+        # Відфільтровуємо перший рядок, який містить назву та дату
+        lines = [line.strip() for line in lines if 'Free proxies' not in line and 'Updated' not in line]
+        # Перетворюємо решту рядків з файлу на список проксі
+        proxies = [line.strip() for line in lines if line.strip()]
+    print(proxies)
+
 
 if __name__ == '__main__':
     logging.basicConfig(filename='DEBUG.log', encoding='utf-8', level=logging.DEBUG)
-    json_file_name = 'deck.json'
-    data = {}
-    for i, j in enumerate(get_data_from_json_file(json_file_name)):
-        if len(j[0].split(' ')) < 3:
-            # print(i, j, len(j[0].split(' ')), in_der_die_das(j[0].split(' ')))
-            data[j[3]] = [in_der_die_das(j[0].split(' ')), '*****', j[1], i, False]
+    # json_file_name = 'deck.json'
+    # data = {}
+    # for i, j in enumerate(get_data_from_json_file(json_file_name)):
+    #     if len(j[0].split(' ')) < 3:
+    #         # print(i, j, len(j[0].split(' ')), in_der_die_das(j[0].split(' ')))
+    #         data[j[3]] = [in_der_die_das(j[0].split(' ')), '*****', j[1], i, False]
+    # #
+    # # for x, y in data.items():
+    # #     print(x, y)
+    #
+    # save_data_in_json_file(data, json_file_name='data.json')
+    #
+    # data = get_data_from_json_file2(json_file_name='data.json')
     #
     # for x, y in data.items():
     #     print(x, y)
+    # row = [1, 'iuuiz', 987987]
+    # id = "23493977"
+    # update_row_in_json_file(id, row, 'data.json')
 
-    save_data_in_json_file(data, json_file_name='data.json')
-
-    data = get_data_from_json_file2(json_file_name='data.json')
-
-    for x, y in data.items():
-        print(x, y)
+    get_proxies_txt('free_proxy')
