@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 import requests
+
 MAX_THREADS = 10
 
 
@@ -68,39 +69,16 @@ async def main():
     tasks = []
     sem = asyncio.Semaphore(MAX_THREADS)
 
-    async with sem:
-        for proxy in proxies:
-            async with sem:
-                task = asyncio.create_task(test_proxy(proxy, cookies))
-                tasks.append(task)
+    # async with sem:
+    for proxy in proxies:
+        async with sem:
+            task = asyncio.create_task(test_proxy(proxy, cookies))
+            tasks.append(task)
 
-        await asyncio.gather(*tasks)
-
-
-def get_proxies_txt(filename):
-    with open(filename + '.txt', 'r') as f:
-        lines = f.readlines()
-        # Відфільтровуємо перший рядок, який містить назву та дату
-        lines = [line.strip() for line in lines if 'Free proxies' not in line and 'Updated' not in line]
-        # Перетворюємо решту рядків з файлу на список проксі
-        proxies = [line.strip() for line in lines if check_proxy(line)]
-    # print(proxies)
-    f.close()
-    return proxies
+    await asyncio.gather(*tasks)
 
 
-def check_proxy(proxy):
-    try:
-        response = requests.get('https://www.google.com', proxies={'https': proxy}, timeout=5)
-        if response.status_code == 200:
-            print(f"Proxy {proxy} is working!")
-            return True
-        else:
-            print(f"Proxy {proxy} is not working!")
-            return False
-    except:
-        print(f"Proxy {proxy} is not working!")
-        return False
+
 
 
 if __name__ == '__main__':

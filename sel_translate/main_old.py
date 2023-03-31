@@ -10,15 +10,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 
-from selenium.webdriver.support.wait import WebDriverWait
-
 from selenium.webdriver.common.by import By
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
 
 from webdriver_manager.chrome import ChromeDriverManager
-from browser_options import CHROME_OPTIONS
+from sel_translate.main.browser.browser_options import CHROME_OPTIONS
 import redis
 
 r = redis.Redis()
