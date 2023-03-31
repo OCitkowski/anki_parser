@@ -3,8 +3,11 @@ import logging
 import datetime
 import asyncio
 import random
+import redis
 
 from options import MAX_CONCURRENT_TASKS, REQUEST_TIMEOUT
+
+
 
 
 async def my_coroutine(line):
@@ -19,7 +22,7 @@ def check_proxy(proxy):
 
         response = requests.get('https://www.google.com', proxies={'https': proxy}, timeout=REQUEST_TIMEOUT)
         if response.status_code == 200:
-
+            r.set(proxy, datetime.datetime.now())
             logging.info(f"{datetime.datetime.now()} // Proxy {proxy} is working!")
 
         else:
@@ -66,5 +69,13 @@ async def main():
 
 
 if __name__ == '__main__':
+    # створення клієнта Redis
+    r = redis.Redis(host='localhost', port=6379, db=0)
+
     logging.basicConfig(filename='proxy.log', encoding='utf-8', datefmt='%Y-%m-%d_%H-%M-%S', level=logging.INFO)
     asyncio.run(main())
+
+    keys = r.keys('*')
+    values = r.mget(keys)
+
+    print(values)
