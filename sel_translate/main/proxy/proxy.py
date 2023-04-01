@@ -55,7 +55,7 @@ async def main(filename, max_concurrent_tasks, time_expire):
     with open(filename, 'r') as f:
         lines = f.readlines()
 
-        for line in lines:
+        for line in tqdm_asyncio(lines):
             await queue.put(my_coroutine(line, time_expire))
     f.close()
 
@@ -63,7 +63,7 @@ async def main(filename, max_concurrent_tasks, time_expire):
     await queue.join()
 
     # Cancel worker tasks
-    for worker_task in tqdm_asyncio(workers):
+    for worker_task in workers:
         worker_task.cancel()
 
 
