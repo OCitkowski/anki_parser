@@ -71,7 +71,7 @@ if __name__ == '__main__':
     print(f'start')
 
     descStr = "For find real proxy " \
-              "&  python3 sel_translate/main/proxy/proxy.py -free_proxy_txt 'free_proxy.txt' -max_concurrent_tasks 10 -time_expire 360"
+              "&  python3 sel_translate/main/proxy/proxy.py -free_proxy_txt 'free_proxy_test.txt' -max_concurrent_tasks 10 -time_expire 360"
     parser = argparse.ArgumentParser(description=descStr)
     parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=True)
     parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)
