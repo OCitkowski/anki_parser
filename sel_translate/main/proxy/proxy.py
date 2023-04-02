@@ -1,7 +1,6 @@
 import requests, logging, datetime
 import asyncio
 import redis
-from tqdm.asyncio import tqdm_asyncio
 
 import argparse
 
@@ -55,7 +54,7 @@ async def main(filename, max_concurrent_tasks, time_expire):
     with open(filename, 'r') as f:
         lines = f.readlines()
 
-        for line in tqdm_asyncio(lines):
+        for line in lines:
             await queue.put(my_coroutine(line, time_expire))
     f.close()
 
@@ -67,8 +66,17 @@ async def main(filename, max_concurrent_tasks, time_expire):
         worker_task.cancel()
 
 
+def print_proxies():
+    l = []
+    while True:
+        proxy = r.lpop('proxies')
+        l.append(proxy)
+        if proxy is None:
+            break
+    print(l)
+
+
 if __name__ == '__main__':
-    print(f'start')
 
     descStr = "For find real proxy " \
               "&  python3 sel_translate/main/proxy/proxy.py -free_proxy_txt 'free_proxy_test.txt' -max_concurrent_tasks 10 -time_expire 360"
@@ -91,13 +99,10 @@ if __name__ == '__main__':
     else:
         time_expire = TIME_EXPIRE
 
-    print(time_expire)
-    print(max_concurrent_tasks)
-
     r = redis.Redis(host='localhost', port=6379, db=0)
     r.flushdb()
 
     logging.basicConfig(filename='proxy.log', encoding='utf-8', datefmt='%Y-%m-%d_%H-%M-%S', level=logging.INFO)
     asyncio.run(main(free_proxy_txt, max_concurrent_tasks, time_expire))
-    print(f'end')
 
+    print_proxies()
