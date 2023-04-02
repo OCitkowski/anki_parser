@@ -18,3 +18,17 @@
 #     if proxy is None:
 #         break
 #     print(proxy.decode())
+# sudo chmod 777 sel_translate/main/proxy/proxy.log
+
+import logging, datetime
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        filename='proxy.log',
+        encoding='utf-8',
+        datefmt='%Y-%m-%d_%H-%M-%S',
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        filemode='a'  # додати записи до файлу з логами, якщо він вже існує
+    )
+    logging.info(f"{datetime.datetime.now()} // Is working!")
