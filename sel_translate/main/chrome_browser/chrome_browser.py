@@ -1,22 +1,9 @@
-import os, time, random, json
-from datetime import datetime
-import logging
-
-from dotenv import load_dotenv
-
+import time, multiprocessing
 from selenium import webdriver
-
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-
-from selenium.webdriver.common.by import By
-
-from selenium.common.exceptions import NoSuchElementException
-
 from webdriver_manager.chrome import ChromeDriverManager
 from sel_translate.main.chrome_browser.options import CHROME_OPTIONS
-import redis
 
 
 class ChromeBrowser():
@@ -34,10 +21,6 @@ class ChromeBrowser():
                                           options=self.__chrome_options)
         if open_browser:
             self.open()
-
-    def __del__(self):
-        # self.__close()
-        pass
 
     def __str__(self):
         return f"Chrome browser: {self.__browser} Timing:  time_sleep = {self.__time_sleep}"
@@ -83,10 +66,20 @@ class ChromeBrowser():
         if self.__time_sleep > 0:
             time.sleep(self.__time_sleep)
 
-    # def __close(self):
-    #     self.__browser.close()
+
+def main(times_sleep, open_browser):
+    chrome = ChromeBrowser(open_browser=open_browser, times_sleep=times_sleep)
+
+
+def wrapper(args):
+    main(times_sleep=args['times_sleep'], open_browser=args['open_browser'])
 
 
 if __name__ == '__main__':
-    Chr = ChromeBrowser(times_sleep=1)
-    Chr.open()
+
+    start = []
+    for i in range(20):
+        start.append({'times_sleep': i, 'open_browser': True})
+
+    with multiprocessing.Pool(processes=10) as pool:
+        pool.map(wrapper, start)
