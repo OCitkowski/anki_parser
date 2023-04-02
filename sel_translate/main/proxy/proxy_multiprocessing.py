@@ -75,23 +75,23 @@ if __name__ == '__main__':
     r = redis.Redis(host='localhost', port=6379, db=0)
     r.flushdb()
 
-    logging.basicConfig(
-        # filename='proxy.log',
-        # encoding='utf-8',
-        datefmt='%Y-%m-%d_%H-%M-%S',
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        # filemode='a',  # додати записи до файлу з логами, якщо він вже існує
-        handlers=[
-            logging.FileHandler('proxy3.log', mode='w', encoding='utf-8'),
-            logging.StreamHandler()
-    ]
-    )
-    logging.info(f"{datetime.datetime.now()} // Is working!")
+    # logging.basicConfig(
+    #     # filename='proxy.log',
+    #     # encoding='utf-8',
+    #     datefmt='%Y-%m-%d_%H-%M-%S',
+    #     level=logging.INFO,
+    #     format='%(asctime)s - %(levelname)s - %(message)s',
+    #     # filemode='a',  # додати записи до файлу з логами, якщо він вже існує
+    #     handlers=[
+    #         logging.FileHandler('proxy3.log', mode='w', encoding='utf-8'),
+    #         logging.StreamHandler()
+    # ]
+    # )
+    # logging.info(f"{datetime.datetime.now()} // Is working!")
 
     proxies = get_proxis_from_txt(free_proxy_txt)
 
-    # with multiprocessing.Pool(processes=max_concurrent_tasks) as pool:
-    #     pool.map(main, proxies)
+    with multiprocessing.Pool(processes=max_concurrent_tasks) as pool:
+        pool.map(main, proxies)
 
-    print_proxies()
+    # print_proxies()

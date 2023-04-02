@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 from webdriver_manager.chrome import ChromeDriverManager
-from sel_translate.main.browser.browser_options import CHROME_OPTIONS
+from sel_translate.main.chrome_browser.options import CHROME_OPTIONS
 import redis
 
 r = redis.Redis()
@@ -130,8 +130,6 @@ class ChromeBrowser():
 
         for proxy in proxies:
             self.__chrome_options.add_argument('--proxy-server={}'.format(proxy))  # додаємо кожен проксі до налаштувань
-
-        # driver = webdriver.Chrome(options=options)
 
         self.__chrome_options.add_argument("--disable-extensions")
         for option in options:

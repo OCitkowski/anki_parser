@@ -1,7 +1,7 @@
 import asyncio
 import random
 
-from sel_translate.main.browser.browser_options import TOTAL_TASKS, MAX_CONCURRENT_TASKS
+from sel_translate.main.chrome_browser.browser_options import TOTAL_TASKS, MAX_CONCURRENT_TASKS
 
 async def my_coroutine(id):
     print(f"Starting coroutine {id}")
