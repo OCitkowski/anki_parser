@@ -23,16 +23,17 @@ class ChromeBrowser():
     """Chrome __browser"""
     __type = "ChromeBrowser"
 
-    def __init__(self):
+    def __init__(self, open_browser=False, times_sleep: int = 60):
         # super.__init__()
 
-        self.__time_sleep = 60
+        self.__time_sleep = times_sleep
         self.__link_by_default = 'https://www.google.com'
         self.__chrome_options = Options()
         self.chrome_options = CHROME_OPTIONS
         self.__browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                                           options=self.__chrome_options)
-        self.open()
+        if open_browser:
+            self.open()
 
     def __del__(self):
         # self.__close()
@@ -76,7 +77,6 @@ class ChromeBrowser():
 
     def open(self):
         self.__browser.get(self.__link_by_default)
-        # self.__browser.refresh()
         self.sleep()
 
     def sleep(self):
@@ -88,4 +88,5 @@ class ChromeBrowser():
 
 
 if __name__ == '__main__':
-    Chr = ChromeBrowser()
+    Chr = ChromeBrowser(times_sleep=1)
+    Chr.open()
