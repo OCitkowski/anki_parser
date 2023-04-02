@@ -17,6 +17,7 @@ async def my_coroutine(proxy, time_expire):
         logging.info(f"{datetime.datetime.now()} // Proxy {proxy} is not working!")
 
     r.expire('proxies', time_expire)
+    return proxy
 
 
 def check_proxy(proxy):
@@ -55,8 +56,13 @@ async def main(filename, max_concurrent_tasks, time_expire):
     with open(filename, 'r') as f:
         lines = f.readlines()
 
-        for line in tqdm_asyncio(lines):
-            await queue.put(my_coroutine(line, time_expire))
+        # for line in tqdm_asyncio(lines):
+        #     await queue.put(my_coroutine(line, time_expire))
+
+        with tqdm_asyncio(total=len(lines)) as pbar:
+            for line in lines:
+                await queue.put(my_coroutine(line, time_expire))
+                pbar.update(1)
     f.close()
 
     # Wait for all tasks to be completed
@@ -71,7 +77,7 @@ if __name__ == '__main__':
     print(f'start')
 
     descStr = "For find real proxy " \
-              "&  python3 sel_translate/main/proxy/proxy.py -free_proxy_txt 'free_proxy_test.txt' -max_concurrent_tasks 10 -time_expire 360"
+              "&  python3 sel_translate/main/proxy/proxy_x.py -free_proxy_txt 'free_proxy_test.txt' -max_concurrent_tasks 10 -time_expire 360"
     parser = argparse.ArgumentParser(description=descStr)
     parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=True)
     parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)
@@ -91,8 +97,8 @@ if __name__ == '__main__':
     else:
         time_expire = TIME_EXPIRE
 
-    print(time_expire)
-    print(max_concurrent_tasks)
+    # print(time_expire)
+    # print(max_concurrent_tasks)
 
     r = redis.Redis(host='localhost', port=6379, db=0)
     r.flushdb()
