@@ -81,5 +81,5 @@ if __name__ == '__main__':
     for i in range(20):
         start.append({'times_sleep': i, 'open_browser': True})
 
-    with multiprocessing.Pool(processes=10) as pool:
+    with multiprocessing.Pool(processes=5) as pool:
         pool.map(wrapper, start)
