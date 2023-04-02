@@ -1,4 +1,6 @@
 import time, multiprocessing
+from multiprocessing.pool import ThreadPool as Pool
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -24,6 +26,9 @@ class ChromeBrowser():
 
     def __str__(self):
         return f"Chrome browser: {self.__browser} Timing:  time_sleep = {self.__time_sleep}"
+
+    # def __del__(self):
+    #     self.close()
 
     @staticmethod
     def __verifity_time_sleep(time_sleep: int):
@@ -66,6 +71,10 @@ class ChromeBrowser():
         if self.__time_sleep > 0:
             time.sleep(self.__time_sleep)
 
+    def close(self):
+        self.__browser.close()
+        self.__browser.quit()
+
 
 def main(times_sleep, open_browser):
     chrome = ChromeBrowser(open_browser=open_browser, times_sleep=times_sleep)
@@ -77,9 +86,19 @@ def wrapper(args):
 
 if __name__ == '__main__':
 
-    start = []
-    for i in range(20):
-        start.append({'times_sleep': i, 'open_browser': True})
+    # start = []
+    # for i in range(5):
+    #     start.append({'times_sleep': 10, 'open_browser': True})
+    #
+    # with Pool(processes=5) as pool:
+    #     pool.map(wrapper, start)
 
-    with multiprocessing.Pool(processes=5) as pool:
-        pool.map(wrapper, start)
+    processes = []
+    for i in range(5):
+        start_args = ({'times_sleep': 10, 'open_browser': True})
+        p = multiprocessing.Process(target=wrapper, args=(start_args,))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
