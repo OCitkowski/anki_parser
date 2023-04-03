@@ -69,6 +69,7 @@ class ChromeBrowser():
 
     def sleep(self):
         if self.__time_sleep > 0:
+            print(self.__browser)
             time.sleep(self.__time_sleep)
 
     def close(self):

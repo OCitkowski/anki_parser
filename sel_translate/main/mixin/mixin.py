@@ -63,37 +63,6 @@ class CookiesMixin():
             print(f'{self._cookies_file_name}.cookies don`t save to root : {ex}')
         return result
 
-
-class TimeSleepMixin():
-
-    def __init__(self):
-
-        self.__max_time_sleep = 0
-        self.__min_time_sleep = 0
-        self.__hand_time_sleep = 0
-
-    @staticmethod
-    def __verifity_time_sleep(time_sleep: int):
-        if isinstance(time_sleep, int):
-            return time_sleep
-        else:
-            raise TypeError
-
-    def get_times_sleep(self) -> dict:
-        return {'hand_time': self.__hand_time_sleep, 'min': self.__min_time_sleep, 'max': self.__max_time_sleep}
-
-    def set_times_sleep(self, hand_time_sleep: int = 0, min_time_sleep: int = 0, max_time_sleep: int = 0):
-        if self.__verifity_time_sleep(hand_time_sleep) > 0:
-            self.__hand_time_sleep = hand_time_sleep
-            self.__min_time_sleep = 0
-            self.__max_time_sleep = 0
-
-        if self.__verifity_time_sleep(hand_time_sleep) == 0 \
-                and self.__verifity_time_sleep(min_time_sleep) <= self.__verifity_time_sleep(max_time_sleep):
-            self.__min_time_sleep = min_time_sleep
-            self.__max_time_sleep = max_time_sleep
-
-
 class BrauserOptions():
     def __init__(self):
         self.__browser = None
