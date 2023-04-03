@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 from webdriver_manager.chrome import ChromeDriverManager
-from sel_translate.main.chrome_browser.options import CHROME_OPTIONS
+from browser.chrome_browser import CHROME_OPTIONS
 import redis
 
 r = redis.Redis()

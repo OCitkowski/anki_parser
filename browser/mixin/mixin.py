@@ -3,6 +3,8 @@ import json
 
 class CookiesMixin():
     def __init__(self):
+
+        super().__init__()
         self._cookies_file_name = 'chrome'
         self.__open_cook_file = None
 
@@ -14,9 +16,17 @@ class CookiesMixin():
     def cookies_file_name(self, file_name: str):
         self._cookies_file_name = self.__verifity_file_name(file_name)
 
-    @cookies_file_name.deleter
-    def cookies_file_name(self):
-        self._cookies_file_name = ''
+
+    @staticmethod
+    def __verifity_file_name(file_name: str):
+        if isinstance(file_name, str):
+            return file_name
+        else:
+            raise TypeError
+
+
+
+
 
     def del_cookies_browser(self) -> bool:
         result = False
