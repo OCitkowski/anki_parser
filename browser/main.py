@@ -4,19 +4,20 @@ from mixin.mixin import CookiesMixin
 
 
 class Browser(ChromeBrowser, CookiesMixin):
-    """Chrome __browser"""
-    __type = "ChromeBrowser"
-
-    def __init__(self, open_browser=False, times_sleep: int = 60, *args):
-        super().__init__(*args)
-        self.time_sleep = times_sleep
-        if open_browser:
-            self.open()
+    def __init__(self):
+        super().__init__()
+        # self.time_sleep = times_sleep
+        # if open_browser:
+        #     self.open()
 
 
 def main(times_sleep, open_browser):
-    chrome = Browser(open_browser=open_browser, times_sleep=times_sleep)
+    chrome = Browser()
     chrome.sleep()
+    # chrome.cookies_file_name = 'xxx'
+    # # chrome.save_cookies_to_file()
+    chrome.time_sleep = 10
+    # chrome.open()
 
 
 
@@ -34,8 +35,8 @@ if __name__ == '__main__':
     #     pool.map(wrapper, start)
 
     processes = []
-    for i in range(5):
-        start_args = ({'times_sleep': 10, 'open_browser': True})
+    for i in range(2):
+        start_args = ({'times_sleep': 20, 'open_browser': False})
         p = multiprocessing.Process(target=wrapper, args=(start_args,))
         p.start()
         processes.append(p)
