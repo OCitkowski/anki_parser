@@ -1,0 +1,1 @@
+from browser.mixin.mixin import CookiesMixin
