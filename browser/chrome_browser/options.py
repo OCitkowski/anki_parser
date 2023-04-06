@@ -17,9 +17,7 @@ CHROME_OPTIONS = [
     '--ignore-certificate-errors', #: ігнорувати помилки сертифікатів HTTPS
     '--homedir=/tmp', #: вказати домашній каталог для браузера
     '--disk-cache-dir=/tmp/cache-dir', #: вказати шлях до каталогу з кешем
-    'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36', #: встановити користувацький рядок агента
     '--disable-blink-features=AutomationControlled', #: вимкнути певні функції браузера, які використовуються для автоматизації.
-
     '--disable-extensions',  #: вимкнути всі розширення браузера
     '--disable-popup-blocking',  #: вимкнути блокування виринаючих вікон
     '--disable-infobars',  #: вимкнути інформаційну панель браузера
@@ -39,5 +37,6 @@ CHROME_OPTIONS = [
     '--disable-background-timer-throttling',  #: вимкнути затримки таймерів у фонових вкладка
 
     'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-    '--disable-blink-features=AutomationControlled'
-]
+    '--disable-blink-features=AutomationControlled',
+    # 'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36', #: встановити користувацький рядок агента
+    ]

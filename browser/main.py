@@ -1,24 +1,19 @@
 import multiprocessing
-from chrome_browser.chrome_browser import ChromeBrowser
-from mixin.mixin import CookiesMixin
+from browser.chrome_browser.chrome_browser import DriverChrome
 
 
-class Browser(ChromeBrowser, CookiesMixin):
+class Browser(DriverChrome):
     def __init__(self):
-        super().__init__()
-        # self.time_sleep = times_sleep
-        # if open_browser:
-        #     self.open()
+        super().__init__(time_sleep=5)
 
 
 def main(times_sleep, open_browser):
-    chrome = Browser()
-    chrome.sleep()
-    # chrome.cookies_file_name = 'xxx'
-    # # chrome.save_cookies_to_file()
-    chrome.time_sleep = 10
-    # chrome.open()
-
+    driver = Browser()
+    driver.get('https://www.google.com/')
+    driver.sleep()
+    driver.cookies_file_name = 'hello'
+    driver.save_cookies_to_file()
+    driver.cookies_browser = False  # TODO
 
 
 def wrapper(args):
