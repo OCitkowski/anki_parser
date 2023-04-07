@@ -53,32 +53,38 @@ def check_proxy(proxy):
 
 def main(times_sleep, proxy, link):
     driver = TranslateBot(proxy=proxy)
-    driver.get('https://www.google.com/')
-    driver.sleep(5)
-    driver.cookies_file_name = 'hello'
+    driver.get(link)
+    driver.sleep(times_sleep)
+    driver.cookies_file_name = f'new-{proxy}'
     driver.save_cookies_to_file()
     driver.cookies_browser = False  # TODO
 
 
 def wrapper(args):
-    main(times_sleep=args['times_sleep'], proxy=args['proxy'])
+    main(times_sleep=args['times_sleep'], proxy=args['proxy'], link=args['link'])
 
 
 if __name__ == '__main__':
-    # processes = []
-    # # for i in range(10):
-    # for proxy in random.choice(get_proxies_from_txt('free_proxy_test.txt')):
-    #     start_args = ({'times_sleep': 20, 'proxy': proxy})
-    #     p = multiprocessing.Process(target=wrapper, args=(start_args,))
-    #     p.start()
-    #     processes.append(p)
-    #     print(proxy)
-    #
-    # for p in processes:
-    #     p.join()
+    processes = []
+    # for i in range(10):
+    links = ['https://www.google.com/search?q=hallo',
+             'https://www.google.com/search?q=halloe',
+             'https://www.google.com/search?q=hallor',
+             'https://www.google.com/search?q=hallot']
 
-    filename = 'free_proxy_test.txt'
-    delete_bad_proxies_from_txt(filename)
-    pr = get_proxies_from_txt(filename)
-    print(pr)
-    print(random.choice(pr))
+    for link in links:
+        proxy = random.choice(get_proxies_from_txt('free_proxy_test.txt'))
+        start_args = ({'times_sleep': 5, 'proxy': proxy, 'link': link})
+        p = multiprocessing.Process(target=wrapper, args=(start_args,))
+        p.start()
+        processes.append(p)
+        print(proxy)
+
+    for p in processes:
+        p.join()
+
+    # file_name = 'free_proxy_test.txt'
+    # # delete_bad_proxies_from_txt(file_name)
+    # pr = get_proxies_from_txt(file_name)
+    # print(pr)
+    # print(random.choice(pr))
