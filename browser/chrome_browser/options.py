@@ -37,6 +37,9 @@ CHROME_OPTIONS = [
     '--disable-setuid-sandbox',  #: вимкнути піщаний ящик на рівні системи
     '--disable-background-timer-throttling',  #: вимкнути затримки таймерів у фонових вкладка
 
+    '--ignore-ssl-errors=yes',
+    '--ignore-certificate-errors',
+
     'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
     '--disable-blink-features=AutomationControlled',
     # 'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36', #: встановити користувацький рядок агента

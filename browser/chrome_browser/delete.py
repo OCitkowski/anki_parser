@@ -96,6 +96,12 @@
 #
 #     print("All Chrome processes finished.")
 
+class Chr():
+
+    def __init__(self):
+        print(self.__class__.__name__)
+
+
 import multiprocessing, time
 from selenium import webdriver
 
@@ -107,7 +113,6 @@ def scrape(url):
     time.sleep(5)
     driver.close()
     # do something with the page source
-
 
 
 if __name__ == '__main__':

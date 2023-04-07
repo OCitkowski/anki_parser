@@ -17,9 +17,6 @@ class DriverChrome(Chrome, CookiesMixin, OptionsMixin):
         super().__init__(options=chrome_options,
                          service=Service(ChromeDriverManager().install()))
 
-    def __str__(self):
-        return f"Chrome browser: {self.__browser} Timing:  time_sleep = {self.time_sleep}"
-
     @staticmethod
     def __verifity_time_sleep(time_sleep: int):
         if isinstance(time_sleep, int):

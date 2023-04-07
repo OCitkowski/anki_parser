@@ -19,28 +19,59 @@
 #         break
 #     print(proxy.decode())
 # sudo chmod 777 sel_translate/main/proxy/proxy.log
-import redis
-import logging, datetime
-def print_proxies():
-    l = []
-    r = redis.Redis(host='localhost', port=6379, db=0)
-    while True:
-        proxy = r.lpop('proxies')
-        l.append(proxy)
-        if proxy is None:
-            break
-    print(l)
+# import redis
+# import logging, datetime
+# def print_proxies():
+#     l = []
+#     r = redis.Redis(host='localhost', port=6379, db=0)
+#     while True:
+#         proxy = r.lpop('proxies')
+#         l.append(proxy)
+#         if proxy is None:
+#             break
+#     print(l)
+#
+#
+# if __name__ == '__main__':
+#     # logging.basicConfig(
+#     #     filename='proxy.log',
+#     #     encoding='utf-8',
+#     #     datefmt='%Y-%m-%d_%H-%M-%S',
+#     #     level=logging.INFO,
+#     #     format='%(asctime)s - %(levelname)s - %(message)s',
+#     #     filemode='a'  # додати записи до файлу з логами, якщо він вже існує
+#     # )
+#     # logging.info(f"{datetime.datetime.now()} // Is working!")
+#
+#     print_proxies()
+
+import multiprocessing, time
+from selenium import webdriver
+
+
+def scrape(url):
+    driver = webdriver.Chrome()
+    driver.get(url)
+    page_source = driver.page_source
+    time.sleep(5)
+    driver.close()
+    # do something with the page source
+
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(
-    #     filename='proxy.log',
-    #     encoding='utf-8',
-    #     datefmt='%Y-%m-%d_%H-%M-%S',
-    #     level=logging.INFO,
-    #     format='%(asctime)s - %(levelname)s - %(message)s',
-    #     filemode='a'  # додати записи до файлу з логами, якщо він вже існує
-    # )
-    # logging.info(f"{datetime.datetime.now()} // Is working!")
+    urls = [
+        'https://en.wikipedia.org/wiki/0',
+        'https://en.wikipedia.org/wiki/1',
+        'https://en.wikipedia.org/wiki/2',
+        'https://en.wikipedia.org/wiki/3',
+    ]
 
-    print_proxies()
+    processes = []
+    for url in urls:
+        p = multiprocessing.Process(target=scrape, args=(url,))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()

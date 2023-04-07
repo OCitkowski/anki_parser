@@ -1,4 +1,4 @@
-import multiprocessing
+from multiprocessing import Process
 import random
 
 from browser.chrome_browser.chrome_browser import DriverChrome
@@ -6,10 +6,25 @@ import requests
 
 from browser.chrome_browser.options import REQUEST_TIMEOUT
 
+links_test = ['https://dict.com/ukrainisch-deutsch/hallo',
+              'https://dict.com/ukrainisch-deutsch/Strafe',
+              'https://dict.com/ukrainisch-deutsch/anderer',
+              'https://dict.com/ukrainisch-deutsch/deutsch']
+
+urls = [
+    'https://en.wikipedia.org/wiki/0',
+    'https://en.wikipedia.org/wiki/1',
+    'https://en.wikipedia.org/wiki/2',
+    'https://en.wikipedia.org/wiki/3',
+]
+
 
 class TranslateBot(DriverChrome):
     def __init__(self, proxy: str = None):
         super().__init__(proxy=proxy)
+        print(self.__repr__())  # = hex(id(self))
+        print(id(self))
+
 
 
 def get_proxies_from_txt(file_name: str) -> list:
@@ -51,40 +66,42 @@ def check_proxy(proxy):
         return False
 
 
-def main(times_sleep, proxy, link):
+def main(times_sleep, proxy, link, item):
     driver = TranslateBot(proxy=proxy)
-    driver.get(link)
+    # name = f'driver_{item}'
+    # exec(f'{name} = TranslateBot(proxy={proxy})')
+
+    # cookies_file_name = 'new-None'
+    # name.cookies_browser = cookies_file_name
+
+    # driver.cookies_browser = cookies_file_name
+    # driver.get(link)
     driver.sleep(times_sleep)
-    driver.cookies_file_name = f'new-{proxy}'
-    driver.save_cookies_to_file()
-    driver.cookies_browser = False  # TODO
+    #
+    # for l in links_test:
+    #     driver.get(l)
+    #     driver.sleep(times_sleep)
+    #
+    #
+    # driver.save_cookies_to_file(cookies_file_name)
+    # driver.cookies_browser = False  # TODO
 
 
 def wrapper(args):
-    main(times_sleep=args['times_sleep'], proxy=args['proxy'], link=args['link'])
+    main(times_sleep=args['times_sleep'], proxy=args['proxy'], link=args['link'], item=args['item'])
 
 
 if __name__ == '__main__':
     processes = []
-    # for i in range(10):
-    links = ['https://www.google.com/search?q=hallo',
-             'https://www.google.com/search?q=halloe',
-             'https://www.google.com/search?q=hallor',
-             'https://www.google.com/search?q=hallot']
 
-    for link in links:
+    for i, link in enumerate(urls):
         proxy = random.choice(get_proxies_from_txt('free_proxy_test.txt'))
-        start_args = ({'times_sleep': 5, 'proxy': proxy, 'link': link})
-        p = multiprocessing.Process(target=wrapper, args=(start_args,))
+
+        start_args = ({'times_sleep': 5, 'proxy': proxy, 'link': link, 'item': i})
+        p = Process(target=wrapper, args=(start_args,))
         p.start()
         processes.append(p)
         print(proxy)
 
     for p in processes:
         p.join()
-
-    # file_name = 'free_proxy_test.txt'
-    # # delete_bad_proxies_from_txt(file_name)
-    # pr = get_proxies_from_txt(file_name)
-    # print(pr)
-    # print(random.choice(pr))

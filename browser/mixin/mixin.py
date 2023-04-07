@@ -5,37 +5,25 @@ from browser.chrome_browser.options import CHROME_OPTIONS
 
 class CookiesMixin:
     def __init__(self):
-        print(3)
-        self._cookies_file_name = 'chrome'
+
         super().__init__()
-
-    @property
-    def cookies_file_name(self):
-        return self._cookies_file_name
-
-    @cookies_file_name.setter
-    def cookies_file_name(self, file_name: str):
-        self._cookies_file_name = file_name
 
     @property
     def cookies_browser(self):
         return self.get_cookies()
 
     @cookies_browser.setter
-    def cookies_browser(self, clearn_old_cookies):
+    def cookies_browser(self, cookies_file_name):
         try:
-
-            if clearn_old_cookies:
-                del (self.cookies_browser)
-
-            cookies_file = open(f"{self.__verifity_file_name(self.cookies_file_name)}.cookies", "r")
+            cookies_file = open(f"{self.__verifity_file_name(cookies_file_name)}.cookies", "r")
             cookies = json.load(cookies_file)
             for cookie in cookies:
                 self.add_cookie(cookie)
         except:
             self.refresh()
         finally:
-            cookies_file.close()
+            # cookies_file.close()
+            pass
 
     @cookies_browser.deleter
     def cookies_browser(self):
@@ -48,15 +36,15 @@ class CookiesMixin:
         else:
             raise TypeError
 
-    def save_cookies_to_file(self) -> bool:
+    def save_cookies_to_file(self, cookies_file_name: str) -> bool:
         result = False
         try:
-            with open(f"{self.cookies_file_name}.cookies", 'w') as write_file:
+            with open(f"{cookies_file_name}.cookies", 'w') as write_file:
                 json.dump(self.get_cookies(), write_file, ensure_ascii=False)
                 result = True
-            print(f'{self.cookies_file_name}.cookies save to root')
+            print(f'{cookies_file_name}.cookies save to root')
         except Exception as ex:
-            print(f'{self.cookies_file_name}.cookies don`t save to root : {ex}')
+            print(f'{cookies_file_name}.cookies don`t save to root : {ex}')
         return result
 
 
