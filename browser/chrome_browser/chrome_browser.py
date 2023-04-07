@@ -30,9 +30,12 @@ class DriverChrome(Chrome, CookiesMixin, OptionsMixin):
     def set_time_sleep(self, time_sleep: int):
         self.time_sleep = self.__verifity_time_sleep(time_sleep)
 
-    def sleep(self):
-        if self.time_sleep > 0:
-            time.sleep(self.time_sleep)
+    def sleep(self, time_sleep: int = None):
+        if time_sleep == None:
+            if self.time_sleep > 0:
+                time.sleep(self.time_sleep)
+        else:
+            time.sleep(time_sleep)
 
 
 if __name__ == '__main__':
