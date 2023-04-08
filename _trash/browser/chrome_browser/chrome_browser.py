@@ -1,7 +1,7 @@
 import time
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from browser import CookiesMixin, OptionsMixin
+from _trash.browser import CookiesMixin, OptionsMixin
 from selenium.webdriver import Chrome
 
 

@@ -96,39 +96,75 @@
 #
 #     print("All Chrome processes finished.")
 
-class Chr():
+# class Chr():
+#
+#     def __init__(self):
+#         print(self.__class__.__name__)
+#
+#     def print_n(self):
+#         print(self.('тут повино бути імя екземпляра класса'))
+#
+#
+# if __name__ == '__main__':
+#     for i in range(10):
+#         c = Chr()
+#         c.print_n()
+#
+#
+# тут помилка. в циклі створються один і той же екземпляр класу а треба різні
+#
+# import multiprocessing, time
+# from selenium import webdriver
+#
+#
+# def scrape(url):
+#     driver = webdriver.Chrome()
+#     driver.get(url)
+#     page_source = driver.page_source
+#     time.sleep(5)
+#     driver.close()
+#     # do something with the page source
+#
+#
+# if __name__ == '__main__':
+#
+#     urls = [
+#         'https://en.wikipedia.org/wiki/0',
+#         'https://en.wikipedia.org/wiki/1',
+#         'https://en.wikipedia.org/wiki/2',
+#         'https://en.wikipedia.org/wiki/3',
+#     ]
+#
+#     processes = []
+#     for url in urls:
+#         p = multiprocessing.Process(target=scrape, args=(url,))
+#         p.start()
+#         processes.append(p)
+#
+#     for p in processes:
+#         p.join()
 
-    def __init__(self):
-        print(self.__class__.__name__)
 
+# class Chr():
+#     _count = 0
+#
+#     def __init__(self):
+#         Chr._count += 1
+#         self.name = f"instance_{Chr._count}"
+#         # print(self.__class__.__name__)
+#
+#     def print_n(self):
+#         print(self.name)
+#         print(self.__repr__())  # = hex(id(self))
+#         print(id(self))
+#
+#
+# if __name__ == '__main__':
+#     for i in range(10):
+#         c = Chr()
+#         c.print_n()
+#
+#     for i in range(10):
+#         ipd = Chr()
+#         ipd.print_n()
 
-import multiprocessing, time
-from selenium import webdriver
-
-
-def scrape(url):
-    driver = webdriver.Chrome()
-    driver.get(url)
-    page_source = driver.page_source
-    time.sleep(5)
-    driver.close()
-    # do something with the page source
-
-
-if __name__ == '__main__':
-
-    urls = [
-        'https://en.wikipedia.org/wiki/0',
-        'https://en.wikipedia.org/wiki/1',
-        'https://en.wikipedia.org/wiki/2',
-        'https://en.wikipedia.org/wiki/3',
-    ]
-
-    processes = []
-    for url in urls:
-        p = multiprocessing.Process(target=scrape, args=(url,))
-        p.start()
-        processes.append(p)
-
-    for p in processes:
-        p.join()

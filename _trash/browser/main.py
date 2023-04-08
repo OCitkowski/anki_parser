@@ -1,10 +1,10 @@
 from multiprocessing import Process
 import random
 
-from browser.chrome_browser.chrome_browser import DriverChrome
+from _trash.browser.chrome_browser.chrome_browser import DriverChrome
 import requests
 
-from browser.chrome_browser.options import REQUEST_TIMEOUT
+from _trash.browser.chrome_browser.options import REQUEST_TIMEOUT
 
 links_test = ['https://dict.com/ukrainisch-deutsch/hallo',
               'https://dict.com/ukrainisch-deutsch/Strafe',
@@ -20,7 +20,10 @@ urls = [
 
 
 class TranslateBot(DriverChrome):
+    _count = 0
     def __init__(self, proxy: str = None):
+        TranslateBot._count += 1
+        self.name = f"instance_{TranslateBot._count}"
         super().__init__(proxy=proxy)
         print(self.__repr__())  # = hex(id(self))
         print(id(self))
