@@ -4,6 +4,17 @@ import time
 from selenium.webdriver.common.by import By
 
 import redis
+from anki_parser.settings import URL
+
+
+def get_urls_from_file(json_file_words: str, count_items: int = None) -> list:
+    urls = []
+    for i, row in enumerate(get_data_from_json_file_words(json_file_words)):
+        if count_items != None and i > count_items:
+            break
+        else:
+            urls.append(f'{URL}{row[0]}')
+    return urls
 
 
 def set_cookies_to_browser(driver, cookies_file_name) -> bool:
@@ -184,7 +195,7 @@ def find_elements_by_css_to_list(driver, element_css_names: list) -> list:
 def check_proxy(proxy):
     try:
         response = requests.get('https://www.google.com', proxies={'https': proxy.rstrip('\n')},
-                                timeout=3)
+                                timeout=1)
         if response.status_code == 200:
             return True
         else:
@@ -207,15 +218,15 @@ def set_to_redis_proxy_list(proxy_list: list, name_redis_proxy_list: str) -> Non
 
 
 if __name__ == '__main__':
-    words = get_data_from_json_file_deck('deck')
-
-    save_data_in_json_file(words, 'words.json')
-
-    file_json = '/home/fox/PycharmProjects/python_parsing/scrapy/dict_com/dict_com/spiders/words.json'
-    words = get_data_from_json_file_words(file_json)
-    for row in words:
-        # if row != None:
-        print(row[1])
-
-    #
-    # start_urls = [f"https://dict.com/ukrainisch-deutsch/{row}" for row in words]
+    pass
+# words = get_data_from_json_file_deck('deck')
+#
+# save_data_in_json_file(words, 'words.json')
+#
+# file_json = '/home/fox/PycharmProjects/python_parsing/scrapy/dict_com/dict_com/spiders/words.json'
+# words = get_data_from_json_file_words(file_json)
+# for row in words:
+#     # if row != None:
+#     print(row[1])
+#
+# start_urls = [f"https://dict.com/ukrainisch-deutsch/{row}" for row in words]

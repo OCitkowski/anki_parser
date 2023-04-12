@@ -1,6 +1,10 @@
 MAX_CONCURRENT_TASKS = 5
 TOTAL_TASKS = 100
 REQUEST_TIMEOUT = 2
+NAME_REDIS_PROXY = 'check_proxy_list'
+NAME_COOKIES_FILE = 'cookies'
+
+URL = 'https://dict.com/ukrainisch-deutsch/'
 
 CHROME_OPTIONS = [
     # '--headless', #: безголовний режим роботи браузера
