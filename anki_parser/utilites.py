@@ -1,7 +1,9 @@
-import json, os
+import json, os, requests
 import time
 
 from selenium.webdriver.common.by import By
+
+import redis
 
 
 def set_cookies_to_browser(driver, cookies_file_name) -> bool:
@@ -177,6 +179,31 @@ def find_elements_by_css_to_list(driver, element_css_names: list) -> list:
             time.sleep(5)
 
     return finded_elements
+
+
+def check_proxy(proxy):
+    try:
+        response = requests.get('https://www.google.com', proxies={'https': proxy.rstrip('\n')},
+                                timeout=3)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+
+def set_to_redis_proxy_list(proxy_list: list, name_redis_proxy_list: str) -> None:
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    try:
+        for proxy in proxy_list:
+            if check_proxy(proxy):
+                r.rpush(name_redis_proxy_list, proxy)
+                print(f'{proxy} is OK')
+            else:
+                print(f'{proxy} is failed')
+    except:
+        pass
 
 
 if __name__ == '__main__':
