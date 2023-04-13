@@ -4,7 +4,7 @@ import time
 from selenium.webdriver.common.by import By
 
 import redis
-from anki_parser.settings import URL
+from anki_parser.settings import URL, NAME_JSON_WORDS_FILE
 
 
 def get_urls_from_file(json_file_words: str, count_items: int = None) -> list:
@@ -12,8 +12,10 @@ def get_urls_from_file(json_file_words: str, count_items: int = None) -> list:
     for i, row in enumerate(get_data_from_json_file_words(json_file_words)):
         if count_items != None and i > count_items:
             break
+
         else:
-            urls.append(f'{URL}{row[0]}')
+            if row[2] == False:
+                urls.append(f'{URL}{row[0]}?id={row[1]}&status={row[2]}')  # https://example.com/?name=John&age=30
     return urls
 
 
@@ -125,7 +127,7 @@ def get_data_from_json_file_words(json_file_name):
     return row
 
 
-def save_item_in_json_file(item, json_file_name):
+def save_item_in_json_file_old(item, json_file_name, url_params):
     write_file = open(json_file_name, "r+")
 
     try:
@@ -135,8 +137,8 @@ def save_item_in_json_file(item, json_file_name):
 
     for dict_item in items:
         for key, value in dict_item.items():
-            if value['id'] == id:
-                value['translation'] = item["translation"]  # замінюємо значення "translation"
+            if value['id'] == url_params['id']:
+                value['translation'] = item[0]  # замінюємо значення "translation"
                 value['status'] = True
 
     # перемотка файлу на початок
@@ -210,15 +212,66 @@ def set_to_redis_proxy_list(proxy_list: list, name_redis_proxy_list: str) -> Non
         for proxy in proxy_list:
             if check_proxy(proxy):
                 r.rpush(name_redis_proxy_list, proxy)
-                print(f'{proxy} is OK')
+                print(f'{proxy} redis OK')
             else:
-                print(f'{proxy} is failed')
+                print(f'{proxy} redis failed')
     except:
         pass
 
 
+def set_to_redis_words_trans_list(item, url_params):
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+    # серіалізація списку у JSON
+    item_url_params_json = json.dumps(item)
+
+    try:
+        redis_client.set(url_params['id'][0], item_url_params_json)
+        print(f'{url_params["id"][0]} is OK')
+    except:
+        pass
+
+
+def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+    with open(json_file_name, "r+") as write_file:
+        try:
+            items_json = json.load(write_file)
+        except ValueError:
+            items_json = []
+
+        for dict_item in items_json:
+            for key, value in dict_item.items():
+
+                item_redis = redis_client.get(value['id'])
+                if item_redis == None:
+                    continue
+                data = json.loads(item_redis.decode())
+
+                if item_redis:
+                    # print(data, type(data))
+                    # print(data[0], type(data[0]))
+                    value['translation'] = data[0]  # замінюємо значення "translation"
+                    value['status'] = True  # змінюємо статус з False на True
+                    print(data)
+
+        write_file.seek(0)
+        json.dump(items_json, write_file, ensure_ascii=False, indent=4)
+        write_file.truncate()
+
+
 if __name__ == '__main__':
-    pass
+    # pass
+    # redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+    # prefix = ""
+    # keys = redis_client.keys(f"{prefix}*")
+    # items = redis_client.mget(keys)
+    # for i, row in enumerate(items):
+    #     print(i, row)
+
+    save_from_redis_items_to_words('words.json')
+
 # words = get_data_from_json_file_deck('deck')
 #
 # save_data_in_json_file(words, 'words.json')

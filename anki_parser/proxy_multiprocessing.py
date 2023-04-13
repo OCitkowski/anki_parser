@@ -40,23 +40,31 @@ def check_proxy(proxy):
 
 def main(proxy):
     result = check_proxy(proxy)
+    r = redis.Redis(host='localhost', port=6379, db=0)
 
     if result and proxy.rstrip('\n') != None and proxy.rstrip('\n') != '':
         print(f"{proxy}:work {result}")
+
         r.lpush(NAME_REDIS_PROXY, proxy.rstrip('\n'))
         logging.info(f"{datetime.datetime.now()} // Proxy {proxy} is working!")
     else:
-        print(f"{proxy}:does not work {result}")
+        print(f"{proxy}:does not work")
+
+
 
 
 def print_proxies():
-    l = []
-    while True:
-        proxy = r.lpop(NAME_REDIS_PROXY)
-        l.append(proxy)
-        if proxy is None:
-            break
-    print(l)
+    # l = []
+    # while True:
+    #     proxy = r.lpop(NAME_REDIS_PROXY)
+    #     l.append(proxy)
+    #     if proxy is None:
+    #         break
+    # print(l)
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    items = r.lrange(NAME_REDIS_PROXY, 0, -1)
+    for item in items:
+        print('REDIS_PROXY-', item.decode())
 
 
 if __name__ == '__main__':
@@ -64,7 +72,7 @@ if __name__ == '__main__':
     descStr = "For find real proxy " \
               "&  python3 anki_parser/proxy_multiprocessing.py -free_proxy_txt 'anki_parser/free_proxy.txt' -max_concurrent_tasks 10"
     parser = argparse.ArgumentParser(description=descStr)
-    parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=True)
+    parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=False)
     parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)
 
     args = parser.parse_args()
@@ -77,11 +85,13 @@ if __name__ == '__main__':
         max_concurrent_tasks = OPT_MAX_CONCURRENT_TASKS
 
     r = redis.Redis(host='localhost', port=6379, db=0)
-    r.flushdb()
+    # r.flushdb()
 
     proxies = get_proxis_from_txt(free_proxy_txt)
 
     with multiprocessing.Pool(processes=max_concurrent_tasks) as pool:
         pool.map(main, proxies)
 
-    # print_proxies()
+    r.expire(NAME_REDIS_PROXY, 3600)
+
+    print_proxies()
