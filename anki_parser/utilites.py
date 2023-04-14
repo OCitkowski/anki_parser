@@ -1,12 +1,9 @@
-import json, os, requests
-import time
-
-from selenium.webdriver.common.by import By
-
+import json, os
 import redis
 from anki_parser.settings import URL, NAME_JSON_WORDS_FILE
 
 
+# urls
 def get_urls_from_file(json_file_words: str, count_items: int = None) -> list:
     urls = []
     for i, row in enumerate(get_data_from_json_file_words(json_file_words)):
@@ -19,6 +16,30 @@ def get_urls_from_file(json_file_words: str, count_items: int = None) -> list:
     return urls
 
 
+def get_data_from_json_file_words(json_file_name):
+    row = []
+
+    try:
+        with open(json_file_name, 'r') as file:
+            data = json.load(file)
+
+        for item in data:
+            for key, value in item.items():
+
+                if value['status'] == False:
+                    row.append([value['word'],
+                                value['id'],
+                                value['status'],
+                                value['german_alternatives']
+                                ])
+
+    except Exception as ex:
+        print(ex, os.path.abspath(__file__))
+
+    return row
+
+
+# cookies
 def set_cookies_to_browser(driver, cookies_file_name) -> bool:
     result = False
     try:
@@ -62,6 +83,7 @@ def save_cookies_to_file(driver, cookies_file_name) -> bool:
     return result
 
 
+# json
 def save_data_in_json_file(data, json_file_name):
     result = False
     try:
@@ -106,119 +128,7 @@ def get_data_from_json_file_deck(json_file_name):
     return words
 
 
-def get_data_from_json_file_words(json_file_name):
-    row = []
-
-    try:
-        with open(json_file_name, 'r') as file:
-            data = json.load(file)
-
-        for item in data:
-            for key, value in item.items():
-
-                if value['status'] == False:
-                    row.append([value['word'],
-                                value['id'],
-                                value['status']])
-
-    except Exception as ex:
-        print(ex, os.path.abspath(__file__))
-
-    return row
-
-
-def save_item_in_json_file_old(item, json_file_name, url_params):
-    write_file = open(json_file_name, "r+")
-
-    try:
-        items = json.load(write_file)
-    except ValueError:
-        items = []
-
-    for dict_item in items:
-        for key, value in dict_item.items():
-            if value['id'] == url_params['id']:
-                value['translation'] = item[0]  # замінюємо значення "translation"
-                value['status'] = True
-
-    # перемотка файлу на початок
-    write_file.seek(0)
-
-    # запис у вихідний файл
-    json.dump(items, write_file, ensure_ascii=False, indent=4)
-
-    # обрізання файлу, щоб він був тільки такого ж розміру, як вміщує даних
-    write_file.truncate()
-
-    write_file.close()
-
-
-def find_elements_by_css(self, element_css_names: list) -> dict:
-    # finded_elements = {}
-    #
-    # for i in element_css_names:
-    #     try:
-    #         full_row = ''
-    #         elements = self.__browser.find_elements(By.CSS_SELECTOR, i)
-    #         for row in elements:
-    #             full_row += f'{row.text}; '
-    #
-    #         finded_elements[i] = full_row
-    #     except:
-    #
-    #         finded_elements[i] = None
-    #     finally:
-    #         self.sleep()
-    #
-    # return finded_elements
-    pass
-
-
-def find_elements_by_css_to_list(driver, element_css_names: list) -> list:
-    finded_elements = []
-
-    for i in element_css_names:
-        try:
-            full_row = ''
-            elements = driver.find_elements(By.CSS_SELECTOR, i)
-            for row in elements:
-                full_row += f'{row.text}; '
-
-            finded_elements.append(full_row)
-        except:
-
-            finded_elements.append(' ')
-        finally:
-            time.sleep(5)
-
-    return finded_elements
-
-
-def check_proxy(proxy):
-    try:
-        response = requests.get('https://www.google.com', proxies={'https': proxy.rstrip('\n')},
-                                timeout=1)
-        if response.status_code == 200:
-            return True
-        else:
-            return False
-    except:
-        return False
-
-
-def set_to_redis_proxy_list(proxy_list: list, name_redis_proxy_list: str) -> None:
-    r = redis.Redis(host='localhost', port=6379, db=0)
-    try:
-        for proxy in proxy_list:
-            if check_proxy(proxy):
-                r.rpush(name_redis_proxy_list, proxy)
-                print(f'{proxy} redis OK')
-            else:
-                print(f'{proxy} redis failed')
-    except:
-        pass
-
-
+# redis
 def set_to_redis_words_trans_list(item, url_params):
     redis_client = redis.Redis(host='localhost', port=6379, db=0)
     # серіалізація списку у JSON
@@ -249,11 +159,9 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
                 data = json.loads(item_redis.decode())
 
                 if item_redis:
-                    # print(data, type(data))
-                    # print(data[0], type(data[0]))
                     value['translation'] = data[0]  # замінюємо значення "translation"
+                    value['german_alternatives'] = data[0]
                     value['status'] = True  # змінюємо статус з False на True
-                    print(data)
 
         write_file.seek(0)
         json.dump(items_json, write_file, ensure_ascii=False, indent=4)
@@ -261,25 +169,4 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
 
 
 if __name__ == '__main__':
-    # pass
-    # redis_client = redis.Redis(host='localhost', port=6379, db=0)
-
-    # prefix = ""
-    # keys = redis_client.keys(f"{prefix}*")
-    # items = redis_client.mget(keys)
-    # for i, row in enumerate(items):
-    #     print(i, row)
-
     save_from_redis_items_to_words('words.json')
-
-# words = get_data_from_json_file_deck('deck')
-#
-# save_data_in_json_file(words, 'words.json')
-#
-# file_json = '/home/fox/PycharmProjects/python_parsing/scrapy/dict_com/dict_com/spiders/words.json'
-# words = get_data_from_json_file_words(file_json)
-# for row in words:
-#     # if row != None:
-#     print(row[1])
-#
-# start_urls = [f"https://dict.com/ukrainisch-deutsch/{row}" for row in words]

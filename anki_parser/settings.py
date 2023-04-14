@@ -1,5 +1,5 @@
-MAX_CONCURRENT_TASKS = 25
-TOTAL_TASKS = 60
+MAX_CONCURRENT_TASKS = 30
+TOTAL_TASKS = 1000
 REQUEST_TIMEOUT = 2
 NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
@@ -9,7 +9,7 @@ NAME_JSON_WORDS_FILE = 'anki_parser/words.json'
 URL = 'https://dict.com/ukrainisch-deutsch/'
 
 CHROME_OPTIONS = [
-    '--headless', #: безголовний режим роботи браузера
+    '--headless',  #: безголовний режим роботи браузера
 
     # '--start-maximized', #: максимізувати вікно браузера після запуску
     # '--no-sandbox', #: запускати браузер без піщаного ящика(sandbox)
@@ -57,5 +57,6 @@ CSS_SELECTOR = (
     "span.lex_ful_entr.l1",
     "span.lex_ful_pron",
     "span.lex_ful_morf",
-    "span.lex_ful_form"
+    "span.lex_ful_form",
+    "span.lex_ftx_sens"
 )
