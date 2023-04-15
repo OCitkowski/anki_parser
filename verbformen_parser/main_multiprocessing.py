@@ -8,11 +8,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
-from anki_parser.settings import CHROME_OPTIONS, CSS_SELECTOR, NAME_REDIS_PROXY, NAME_COOKIES_FILE, \
+from verbformen_parser.settings import CHROME_OPTIONS, CSS_SELECTOR, NAME_REDIS_PROXY, NAME_COOKIES_FILE, \
     MAX_CONCURRENT_TASKS, TOTAL_TASKS, NAME_JSON_WORDS_FILE
-from anki_parser.utilites import save_cookies_to_file, set_cookies_to_browser, \
+from verbformen_parser.utilites import save_cookies_to_file, set_cookies_to_browser, \
     get_urls_from_file, set_to_redis_words_trans_list, save_from_redis_items_to_words
-from anki_parser.handlers import find_elements_by_css_to_list
+from verbformen_parser.handlers import find_elements_by_css_to_list
 import redis
 
 from urllib.parse import urlparse, parse_qs
@@ -67,7 +67,7 @@ def open_page(url):
     driver.get(url)
     set_cookies_to_browser(driver, NAME_COOKIES_FILE)
 
-    found_elements = find_elements_by_css_to_list(driver=driver, element_css_names=CSS_SELECTOR)
+    found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR)
     print(found_elements)
 
     parsed_url = urlparse(url)

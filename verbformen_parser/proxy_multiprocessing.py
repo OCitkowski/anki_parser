@@ -1,5 +1,5 @@
 # run
-# python3 anki_parser/proxy_multiprocessing.py -free_proxy_txt 'anki_parser/free_proxy.txt' -max_concurrent_tasks 10
+# python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25
 
 
 import requests, logging, multiprocessing, datetime
@@ -70,7 +70,7 @@ def print_proxies():
 if __name__ == '__main__':
 
     descStr = "For find real proxy " \
-              "&  python3 anki_parser/proxy_multiprocessing.py -free_proxy_txt 'anki_parser/free_proxy.txt' -max_concurrent_tasks 10"
+              "&  python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25"
     parser = argparse.ArgumentParser(description=descStr)
     parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=False)
     parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)

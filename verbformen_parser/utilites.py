@@ -1,6 +1,6 @@
 import json, os
 import redis
-from anki_parser.settings import URL, NAME_JSON_WORDS_FILE
+from verbformen_parser.settings import URL, NAME_JSON_WORDS_FILE
 
 
 # urls
@@ -158,7 +158,7 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
                     continue
                 data = json.loads(item_redis.decode())
 
-                if item_redis:
+                if item_redis and value['translation'] != '':
                     value['translation'] = data[0]  # замінюємо значення "translation"
                     value['german_alternatives'] = data[0]
                     value['status'] = True  # змінюємо статус з False на True

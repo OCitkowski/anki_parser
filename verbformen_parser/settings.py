@@ -1,12 +1,12 @@
-MAX_CONCURRENT_TASKS = 30
-TOTAL_TASKS = 1000
-REQUEST_TIMEOUT = 2
+MAX_CONCURRENT_TASKS = 10
+TOTAL_TASKS = 100
+REQUEST_TIMEOUT = 10
 NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
 NAME_COOKIES_FILE = 'cookies'
-NAME_JSON_WORDS_FILE = 'anki_parser/words.json'
-
+NAME_JSON_WORDS_FILE = 'verbformen_parser/words.json'
 URL = 'https://dict.com/ukrainisch-deutsch/'
+TIME_SLEEP = 3
 
 CHROME_OPTIONS = [
     '--headless',  #: безголовний режим роботи браузера

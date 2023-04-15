@@ -9,8 +9,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import redis
 
-from anki_parser.settings import CHROME_OPTIONS, MAX_CONCURRENT_TASKS, TOTAL_TASKS, REQUEST_TIMEOUT
-from anki_parser.utilites import save_cookies_to_file, set_cookies_to_browser
+from verbformen_parser.settings import CHROME_OPTIONS, MAX_CONCURRENT_TASKS, TOTAL_TASKS, REQUEST_TIMEOUT
+from verbformen_parser.utilites import save_cookies_to_file, set_cookies_to_browser
 
 urls = ['https://www.verbformen.ru/sklonenie/sushhestvitelnye/Heft.htm',
         'https://www.verbformen.ru/sklonenie/sushhestvitelnye/?w=hallen',
