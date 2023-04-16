@@ -1,6 +1,9 @@
-MAX_CONCURRENT_TASKS = 10
-TOTAL_TASKS = 100
+MAX_CONCURRENT_TASKS = 30
+TOTAL_TASKS = 500
 REQUEST_TIMEOUT = 10
+PORT_PROXY_REDIS = 6379
+DB_PROXY_RADIS = 1
+TIME_EXPIRE_PROXY_IP = 36000
 NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
 NAME_COOKIES_FILE = 'cookies'
@@ -10,6 +13,9 @@ TIME_SLEEP = 3
 
 CHROME_OPTIONS = [
     '--headless',  #: безголовний режим роботи браузера
+
+    "--user-data-dir=/home/fox/.config/google-chrome", # chrome://version/  #https://habr.com/ru/articles/442034/
+    "--profile-directory=Default",
 
     # '--start-maximized', #: максимізувати вікно браузера після запуску
     # '--no-sandbox', #: запускати браузер без піщаного ящика(sandbox)
@@ -21,6 +27,8 @@ CHROME_OPTIONS = [
     '--enable-logging',  #: включити логування
     '--log-level=0',  #: встановити рівень логування на 0(найнижчий рівень)
     '--v=99',  #: встановити рівень подробиць логування на 99
+
+
     '--data-path=/tmp/data-path',  #: вказати шлях до  каталогу з даними
     '--ignore-certificate-errors',  #: ігнорувати помилки сертифікатів HTTPS
     # '--homedir=/tmp', #: вказати домашній каталог для браузера

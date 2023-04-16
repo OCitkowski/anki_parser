@@ -1,5 +1,5 @@
 # https://github.com/FooSoft/anki-connect
-
+# /home/fox/.config/google-chrome/Default
 import json
 import re
 import urllib.request

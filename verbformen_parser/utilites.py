@@ -1,6 +1,6 @@
 import json, os
 import redis
-from verbformen_parser.settings import URL, NAME_JSON_WORDS_FILE
+from verbformen_parser.settings import URL, NAME_JSON_WORDS_FILE, PORT_PROXY_REDIS, DB_PROXY_RADIS
 
 
 # urls
@@ -59,7 +59,7 @@ def set_cookies_to_browser(driver, cookies_file_name) -> bool:
     finally:
         try:
             open_cook_file.close()
-            print(f'set cookies is {result}')
+            # print(f'set cookies is {result}')
         except Exception as ex:
             print(ex)
 
@@ -74,7 +74,7 @@ def save_cookies_to_file(driver, cookies_file_name) -> bool:
         with open(f"{cookies_file_name}.pkl", 'w') as write_file:
             json.dump(driver.get_cookies(), write_file, ensure_ascii=False)
             result = True
-        print(f'{cookies_file_name}.pkl save to root')
+        # print(f'{cookies_file_name}.pkl save to root')
     except Exception as ex:
         print(f'{cookies_file_name}.pkl don`t save to root : {ex}')
     finally:
@@ -129,6 +129,25 @@ def get_data_from_json_file_deck(json_file_name):
 
 
 # redis
+def get_sorted_rating_proxy_list():
+    redis_client = redis.Redis(host='localhost', port=PORT_PROXY_REDIS, db=DB_PROXY_RADIS)
+    rating_proxy_list = []
+    sorted_rating_proxy_list = []
+    keys = redis_client.keys()
+
+    for key in keys:
+        item_json = redis_client.get(key)
+        rating_proxy_list.append(json.loads(item_json))
+
+    # sorted_rating_proxy_list = sorted(rating_proxy_list, key=lambda item: item[1] - item[2], reverse=True)
+    sorted_rating_list = sorted(rating_proxy_list, key=lambda x: (-x[1] + x[2], -x[1]))
+
+    for i in sorted_rating_list:
+        sorted_rating_proxy_list.append(i[0])
+
+    return sorted_rating_proxy_list
+
+
 def set_to_redis_words_trans_list(item, url_params):
     redis_client = redis.Redis(host='localhost', port=6379, db=0)
     # серіалізація списку у JSON
@@ -139,6 +158,30 @@ def set_to_redis_words_trans_list(item, url_params):
         print(f'{url_params["id"][0]} is OK')
     except:
         pass
+
+
+def get_redis_words_trans_list():
+    result = {}
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+    try:
+
+        for key in redis_client.scan_iter("*"):
+            value = redis_client.get(key)
+            result[key.decode()] = json.loads(value.decode())
+    except Exception as ex:
+        print(ex)
+
+    return result
+
+
+def del_empty_row():
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+    for key in redis_client.scan_iter():
+        value = redis_client.get(key)
+        if json.loads(value.decode())[0] == '':
+            redis_client.delete(key)
 
 
 def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
@@ -158,7 +201,7 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
                     continue
                 data = json.loads(item_redis.decode())
 
-                if item_redis and value['translation'] != '':
+                if item_redis:
                     value['translation'] = data[0]  # замінюємо значення "translation"
                     value['german_alternatives'] = data[0]
                     value['status'] = True  # змінюємо статус з False на True
@@ -169,4 +212,14 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
 
 
 if __name__ == '__main__':
+    # del_empty_row()
     save_from_redis_items_to_words('words.json')
+
+
+    # get_redis_words_trans_list()
+    # del_empty_row()
+    # redis_items = get_redis_words_trans_list()
+    #
+    # for i, j in redis_items.items():
+    #     print(i, j)
+    # print(get_sorted_rating_proxy_list())
