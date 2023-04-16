@@ -39,7 +39,7 @@ def get_data_from_json_file_words(json_file_name):
     return row
 
 
-# cookies
+# cookies?
 def set_cookies_to_browser(driver, cookies_file_name) -> bool:
     result = False
     try:
@@ -97,8 +97,9 @@ def save_data_in_json_file(data, json_file_name):
 
 
 def get_data_from_json_file_deck(json_file_name):
+    words = []
     try:
-        words = []
+
         with open(json_file_name + '.json', 'r+') as read_file:
             template = json.load(read_file)
             for i, note in enumerate(template['notes']):

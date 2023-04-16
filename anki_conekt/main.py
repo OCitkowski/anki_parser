@@ -23,13 +23,41 @@ def invoke(action, **params):
     return response['result']
 
 
+def add_tag():
+    # add tag  в усіх картках
+    field_name1 = 'Part of Speech'
+    field_name2 = 'Level'
+
+    new_field_value = 'NewFieldValue'
+    for i, note_id in enumerate(note_ids):
+
+        note_info = invoke('notesInfo', notes=[note_id])[0]
+
+        try:
+            x = int(note_info['fields'][field_name2]['value'])
+
+            tag = note_info['fields'][field_name1]['value']
+            tag1 = re.sub(r'\d+\)|\(|\)+-1234567890.;:,', '', tag)
+
+            tag2 = f'{x:03d}'
+            note_info['tags'].append(tag2)
+            note_info['tags'].append(tag1)
+            invoke('updateNoteTags', note=note_info['noteId'], tags=note_info['tags'])
+        except:
+            pass
+
+
+def update_deck():
+    pass
+
+
 if __name__ == '__main__':
 
     # назви колод
     result = invoke('deckNames')
     print('got list of decks: {}'.format(result))
 
-    # Отримати список ID карток у колоді з іменем "MyDeckName"
+    # Отримати список ID карток у колоді
     deck_name = result[1]
     note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
     print(f'Знайдено {len(note_ids)} карток у колоді {deck_name}')
