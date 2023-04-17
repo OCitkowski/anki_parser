@@ -121,10 +121,13 @@ def find_elements_by_css_to_list(driver, css_selector_s: list) -> list:
 
 
 if __name__ == '__main__':
-    urls = ['https://www.verbformen.de/deklination/substantive/?w=Katze',
-            'https://www.verbformen.de/deklination/substantive/?w=Gabel',
-            'https://www.verbformen.de/deklination/substantive/?w=tanzen',
-            ]
+    urls_test = ['https://dict.com/ukrainisch-deutsch/zu',
+                 'https://dict.com/ukrainisch-deutsch/sich',
+                 'https://dict.com/ukrainisch-deutsch/morgen',
+                 'https://dict.com/ukrainisch-deutsch/haben',
+                 'https://dict.com/ukrainisch-deutsch/muss',
+                 'https://dict.com/ukrainisch-deutsch/soll',
+                 ]
 
     chrome_options = Options()
     for row in CHROME_OPTIONS:
@@ -136,7 +139,7 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(desired_capabilities=capabilities,
                               service=Service(ChromeDriverManager().install()),
                               options=chrome_options)
-    for url in urls:
+    for url in urls_test:
         driver.get(url)
         set_cookies_to_browser(driver, NAME_COOKIES_FILE)
         selector_I = "//p[contains(@class,'vGrnd rCntr')]"
@@ -146,4 +149,4 @@ if __name__ == '__main__':
         elements_II = find_element_s_by_xpath(driver, selector_II)
 
         save_cookies_to_file(driver=driver, cookies_file_name=NAME_COOKIES_FILE)
-        print(parse_word(elements_I), parse_level(elements_II),)
+        print(parse_word(elements_I), parse_level(elements_II), )

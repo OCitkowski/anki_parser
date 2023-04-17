@@ -152,39 +152,27 @@ def print_proxies():
 
 if __name__ == '__main__':
 
-    # descStr = "For find real proxy " \
-    #           "&  python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25"
-    # parser = argparse.ArgumentParser(description=descStr)
-    # parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=False)
-    # parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)
-    #
-    # args = parser.parse_args()
-    #
-    # free_proxy_txt = args.FreeProxyTxt
-    #
-    # if args.MAX_CONCURRENT_TASKS:
-    #     max_concurrent_tasks = int(args.MAX_CONCURRENT_TASKS)
-    # else:
-    #     max_concurrent_tasks = MAX_CONCURRENT_TASKS
-    #
-    # # redis_client.flushdb()
-    #
-    # proxies = get_proxis_from_txt(free_proxy_txt)
-    #
-    # with multiprocessing.Pool(processes=max_concurrent_tasks) as pool:
-    #     pool.map(main, proxies)
-    #
-    # # redis_client.expire(NAME_REDIS_PROXY, TIME_EXPIRE_PROXY_IP)
-    #
-    # print_proxies()
+    descStr = "For find real proxy " \
+              "&  python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25"
+    parser = argparse.ArgumentParser(description=descStr)
+    parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=False)
+    parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)
 
-    free_proxy_txt = 'free_proxy.txt'
+    args = parser.parse_args()
+
+    free_proxy_txt = args.FreeProxyTxt
+
+    if args.MAX_CONCURRENT_TASKS:
+        max_concurrent_tasks = int(args.MAX_CONCURRENT_TASKS)
+    else:
+        max_concurrent_tasks = MAX_CONCURRENT_TASKS
+    # # redis_client.flushdb()#
+
+    # free_proxy_txt = 'free_proxy.txt'
     proxies = get_proxis_from_txt(free_proxy_txt, 1000)
 
     with multiprocessing.Pool(processes=MAX_CONCURRENT_TASKS) as pool:
         pool.map(main, proxies)
 
-    print_rating_proxy_s()
-
-    for i in get_sorted_rating_proxy_list():
-        print(i[0], i)
+    for i, id in enumerate(get_sorted_rating_proxy_list()):
+        print(i, id[0], id)
