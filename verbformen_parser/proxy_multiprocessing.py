@@ -122,19 +122,6 @@ def delete_rating_proxy_by_keys(keys: [list, str]):
         redis_client.delete(keys)
 
 
-def set_proxy_to_redis_old(proxy):
-    result = failed_connect_proxy(proxy)
-    redis_client = redis.Redis(host='localhost', port=PORT_PROXY_REDIS, db=DB_PROXY_RADIS)
-
-    if result and proxy.rstrip('\n') != None and proxy.rstrip('\n') != '':
-        print(f"{proxy}:work {result}")
-
-        redis_client.lpush(NAME_REDIS_PROXY, proxy.rstrip('\n'))
-        logging.info(f"{datetime.datetime.now()} // Proxy {proxy} is working!")
-    else:
-        print(f"{proxy}:does not work")
-
-
 def print_rating_proxy_s():
     keys = redis_client.keys()
 
@@ -164,7 +151,7 @@ def print_proxies():
 
 
 if __name__ == '__main__':
-    #
+
     # descStr = "For find real proxy " \
     #           "&  python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25"
     # parser = argparse.ArgumentParser(description=descStr)
@@ -178,7 +165,7 @@ if __name__ == '__main__':
     # if args.MAX_CONCURRENT_TASKS:
     #     max_concurrent_tasks = int(args.MAX_CONCURRENT_TASKS)
     # else:
-    #     max_concurrent_tasks = OPT_MAX_CONCURRENT_TASKS
+    #     max_concurrent_tasks = MAX_CONCURRENT_TASKS
     #
     # # redis_client.flushdb()
     #
@@ -191,13 +178,13 @@ if __name__ == '__main__':
     #
     # print_proxies()
 
-    # free_proxy_txt = 'free_proxy.txt'
-    # proxies = get_proxis_from_txt(free_proxy_txt, 1000)
-    #
-    # with multiprocessing.Pool(processes=MAX_CONCURRENT_TASKS) as pool:
-    #     pool.map(main, proxies)
-    #
-    # print_rating_proxy_s()
+    free_proxy_txt = 'free_proxy.txt'
+    proxies = get_proxis_from_txt(free_proxy_txt, 1000)
+
+    with multiprocessing.Pool(processes=MAX_CONCURRENT_TASKS) as pool:
+        pool.map(main, proxies)
+
+    print_rating_proxy_s()
 
     for i in get_sorted_rating_proxy_list():
         print(i[0], i)

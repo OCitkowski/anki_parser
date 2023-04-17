@@ -1,4 +1,4 @@
-#https://github.com/FooSoft/anki-connect
+# https://github.com/FooSoft/anki-connect
 # /home/fox/.config/google-chrome/Default
 import json
 import re
@@ -99,67 +99,39 @@ def add_tag():
             pass
 
 
+
+
 if __name__ == '__main__':
-    #
-    # add_json_data_to_redis()
+
+    add_json_data_to_redis()
     # for i, row in get_redis_words_trans_list().items():
     #     if row['status']:
-    #         # print(i, row)
-
+    #         print(i, row)
     note_ids = get_notes_deck()
-    # print(note_ids)
-
+    ids = []
     for i, note_id in enumerate(note_ids):
-        if i > 1 or note_id == None:
-            break
+
+        # if i > 10 or note_id == None:
+        #     break
         note = invoke("notesInfo", notes=[note_id])
-        print(note)
-        print(note[0])
-        print(note[0]['fields'])
-        note_fields = note[0]['fields']
         note_fields_t_v = note[0]['fields']['Thing']['value']
 
-        print(note_fields_t_v)
         data = get_data_from_redis(note_fields_t_v)
 
         if data == None:
             continue
 
-        invoke('updateNoteFields', note=note[0])
+        if data['status'] == False:
+            continue
 
+        ids.append(note_id)
 
+        Ukrainisch = data['translation']
 
-        # note_info['fields']['Ukrainisch']['value'] = data['translation']
-        # # Викликаємо функцію AnkiConnect для оновлення картки
-        # # print(note_info['noteId'], type(note_info['fields']))
-        # #
-        # # new_fields = json.dumps(note_info['fields'])
-        # # print(new_fields)
-        # new_fields = {'Ukrainisch': 'новий текст на передній стороні'}
-        # ew_fields_str = '\x1f'.join([f"{key}::{value}" for key, value in new_fields.items()])
-        #
-        # invoke('updateNoteFields', note=note_id, fields=ew_fields_str)
+        invoke('updateNoteFields', note={'id': int(note_id), 'fields': {'Ukrainisch': Ukrainisch}})
+        print(i, note_id, Ukrainisch)
 
-
-        # note_info = invoke("notesInfo", notes=[note_id])[0]
-        # note_info['fields']['Ukrainisch'] = 'новий текст на передній стороні'
-        #
-        # invoke('updateNoteFields', note=json.dumps({'id': note_info['noteId'], 'fields': note_info['fields']}))
-        # note_info = invoke("notesInfo", notes=[note_id])[0]
-
-        # змінюємо значення поля Ukrainian
-        note_fields['Ukrainisch']['value'] = 'новий текст на передній стороні'
-        print(type(note_fields))
-        # print( note_info['fields']['Ukrainisch'])
-        # print(note_info['fields']['Ukrainisch']['value'])
-        # print(note_info['fields'])
-
-        # передаємо змінену інформацію про картку у функцію invoke
-        # invoke('updateNoteFields', note_id=[note_id], = note_fields)
-        #
-        # invoke('updateNoteFields', note=json.dumps({'id': int(note_info['noteId']), 'fields': note_info['fields']}))
-
-
-
+        invoke('addTags', notes=[note_id], tags='ukr')
+#addTags
 
 

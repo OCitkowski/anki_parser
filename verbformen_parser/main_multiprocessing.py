@@ -21,8 +21,8 @@ from urllib.parse import urlparse, parse_qs
 r = redis.Redis(host='localhost', port=6379, db=0)
 r.ping()
 
-urls_test = ['https://dict.com/ukrainisch-deutsch/noch',
-             'https://dict.com/ukrainisch-deutsch/sein',
+urls_test = ['https://dict.com/ukrainisch-deutsch/zu',
+             'https://dict.com/ukrainisch-deutsch/sich',
              'https://dict.com/ukrainisch-deutsch/morgen',
              'https://dict.com/ukrainisch-deutsch/haben',
              'https://dict.com/ukrainisch-deutsch/muss',
@@ -63,7 +63,7 @@ def open_page(args):
     driver.get(url)
     set_cookies_to_browser(driver, NAME_COOKIES_FILE)
 
-    found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR)
+    found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR) #todo xpath
     # print(found_elements)
 
     parsed_url = urlparse(url)
