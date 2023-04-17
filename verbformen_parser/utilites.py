@@ -161,19 +161,7 @@ def set_to_redis_words_trans_list(item, url_params):
         pass
 
 
-def get_redis_words_trans_list():
-    result = {}
-    redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-    try:
-
-        for key in redis_client.scan_iter("*"):
-            value = redis_client.get(key)
-            result[key.decode()] = json.loads(value.decode())
-    except Exception as ex:
-        print(ex)
-
-    return result
 
 
 def del_empty_row():
@@ -215,7 +203,6 @@ def save_from_redis_items_to_words(json_file_name=NAME_JSON_WORDS_FILE):
 if __name__ == '__main__':
     # del_empty_row()
     save_from_redis_items_to_words('words.json')
-
 
     # get_redis_words_trans_list()
     # del_empty_row()

@@ -1,8 +1,12 @@
-# https://github.com/FooSoft/anki-connect
+#https://github.com/FooSoft/anki-connect
 # /home/fox/.config/google-chrome/Default
 import json
 import re
 import urllib.request
+import redis
+
+redis_client_7 = redis.Redis(host='localhost', port=6379, db=7)
+words_json = '/home/fox/PycharmProjects/anki_parser/verbformen_parser/words.json'
 
 
 def request(action, **params):
@@ -23,57 +27,63 @@ def invoke(action, **params):
     return response['result']
 
 
-def add_tag():
-    # add tag  в усіх картках
-    field_name1 = 'Part of Speech'
-    field_name2 = 'Level'
+def get_notes_deck():
+    result = invoke('deckNames')
+    deck_name = result[1]
+    note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
 
-    new_field_value = 'NewFieldValue'
-    for i, note_id in enumerate(note_ids):
-
-        note_info = invoke('notesInfo', notes=[note_id])[0]
-
-        try:
-            x = int(note_info['fields'][field_name2]['value'])
-
-            tag = note_info['fields'][field_name1]['value']
-            tag1 = re.sub(r'\d+\)|\(|\)+-1234567890.;:,', '', tag)
-
-            tag2 = f'{x:03d}'
-            note_info['tags'].append(tag2)
-            note_info['tags'].append(tag1)
-            invoke('updateNoteTags', note=note_info['noteId'], tags=note_info['tags'])
-        except:
-            pass
+    return note_ids
 
 
 def update_deck():
     pass
 
 
-if __name__ == '__main__':
+def add_json_data_to_redis():
+    # Отримуємо дані з файлу JSON
+    with open(words_json, 'r') as f:
+        json_data = json.load(f)
 
-    # назви колод
-    result = invoke('deckNames')
-    print('got list of decks: {}'.format(result))
+    # Додаємо дані до Redis бази даних
+    for d in json_data:
+        for k, v in d.items():
+            # Отримуємо ключ
+            id_ = v.get('id')
 
-    # Отримати список ID карток у колоді
-    deck_name = result[1]
-    note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
-    print(f'Знайдено {len(note_ids)} карток у колоді {deck_name}')
+            # Додаємо дані до Redis
+            redis_client_7.set(id_, json.dumps(v))
 
-    # Замінити поле "MyFieldName" на "NewFieldValue" в усіх картках
+
+def get_data_from_redis(id_):
+    data = redis_client_7.get(id_)
+    if data:
+        return json.loads(data.decode('utf-8'))
+    return None
+
+
+def get_redis_words_trans_list():
+    result = {}
+    try:
+
+        for key in redis_client_7.scan_iter("*"):
+            value = redis_client_7.get(key)
+            result[key.decode()] = json.loads(value.decode())
+    except Exception as ex:
+        print(ex)
+
+    return result
+
+
+# *****************************************************
+def add_tag():
+    # add tag  в усіх картках
     field_name1 = 'Part of Speech'
     field_name2 = 'Level'
 
     new_field_value = 'NewFieldValue'
-    for i, note_id in enumerate(note_ids):
-        # if i > 100:
-        #     break
-        note_info = invoke('notesInfo', notes=[note_id])[0]
+    for i, note_id in enumerate(None):
 
-        # note_info['tags'].clear()
-        # invoke('updateNoteTags', note=note_info['noteId'], tags=note_info['tags'])
+        note_info = invoke('notesInfo', notes=[note_id])[0]
 
         try:
             x = int(note_info['fields'][field_name2]['value'])
@@ -88,30 +98,68 @@ if __name__ == '__main__':
         except:
             pass
 
-            # invoke('updateNoteFields', note=note_info['noteId'], tags=note_info['tags'])
 
-        # Зберегти зміни в Anki
+if __name__ == '__main__':
+    #
+    # add_json_data_to_redis()
+    # for i, row in get_redis_words_trans_list().items():
+    #     if row['status']:
+    #         # print(i, row)
 
+    note_ids = get_notes_deck()
+    # print(note_ids)
+
+    for i, note_id in enumerate(note_ids):
+        if i > 1 or note_id == None:
+            break
+        note = invoke("notesInfo", notes=[note_id])
+        print(note)
+        print(note[0])
+        print(note[0]['fields'])
+        note_fields = note[0]['fields']
+        note_fields_t_v = note[0]['fields']['Thing']['value']
+
+        print(note_fields_t_v)
+        data = get_data_from_redis(note_fields_t_v)
+
+        if data == None:
+            continue
+
+        invoke('updateNoteFields', note=note[0])
+
+
+
+        # note_info['fields']['Ukrainisch']['value'] = data['translation']
+        # # Викликаємо функцію AnkiConnect для оновлення картки
+        # # print(note_info['noteId'], type(note_info['fields']))
+        # #
+        # # new_fields = json.dumps(note_info['fields'])
+        # # print(new_fields)
+        # new_fields = {'Ukrainisch': 'новий текст на передній стороні'}
+        # ew_fields_str = '\x1f'.join([f"{key}::{value}" for key, value in new_fields.items()])
         #
-        # print(note_id, note_info['fields'][field_name]['value'], note_info['tags'])
-        # print(note_info['fields'][field_name]['value'] in note_info['tags'])
+        # invoke('updateNoteFields', note=note_id, fields=ew_fields_str)
 
-        # if field_name in note_info['fields']:
-        #     note_info['fields'][field_name] = new_field_value
-        #     invoke('updateNoteFields', note={'id': note_info['noteId'], 'fields': note_info['fields']})
-        #     print(f'Замінено поле "{field_name}" на "{new_field_value}" в картці з ID {note_id}')
-        # else:
-        #     print(f'Поле "{field_name}" відсутнє в картці з ID {note_id}')
 
-# 1421053850741 {'noteId': 1421053850741, 'tags': ['Level015'], 'fields':{
-#     'German': {'value': 'bekannt', 'order': 0},
-#     'Picture': {'value': '<img src="paste-28140625723393.jpg" />', 'order':
-#     1},'English': {'value': 'well-known', 'order':
-#     2}, 'Audio': {'value': '[sound:aa9c8cb0-9f97-579e-8d05-7a2f9c4b6702.mp3]', 'order':
-#     3}, 'Sample sentence': {'value': 'Heike Makatsch ist eine bekannte deutsche Schauspielerin.', 'order': 4},
-#     'Plural and inflected forms': {'value': '', 'order': 5}, 'German Alternatives': {'value': '', 'order': 6},
-#     'English Alternatives': {'value': '', 'order':
-#         7}, 'Part of Speech': {'value': 'adj', 'order':
-#         8}, 'Level': {'value': '15', 'order':
-#         9}, 'Thing': {'value': '23720117', 'order':
-#         10}}, 'modelName': 'Memrise - 4000 German Words by Frequency-7eb67-110c6', 'cards': [1421053850742, 1421592707928]}
+        # note_info = invoke("notesInfo", notes=[note_id])[0]
+        # note_info['fields']['Ukrainisch'] = 'новий текст на передній стороні'
+        #
+        # invoke('updateNoteFields', note=json.dumps({'id': note_info['noteId'], 'fields': note_info['fields']}))
+        # note_info = invoke("notesInfo", notes=[note_id])[0]
+
+        # змінюємо значення поля Ukrainian
+        note_fields['Ukrainisch']['value'] = 'новий текст на передній стороні'
+        print(type(note_fields))
+        # print( note_info['fields']['Ukrainisch'])
+        # print(note_info['fields']['Ukrainisch']['value'])
+        # print(note_info['fields'])
+
+        # передаємо змінену інформацію про картку у функцію invoke
+        # invoke('updateNoteFields', note_id=[note_id], = note_fields)
+        #
+        # invoke('updateNoteFields', note=json.dumps({'id': int(note_info['noteId']), 'fields': note_info['fields']}))
+
+
+
+
+
