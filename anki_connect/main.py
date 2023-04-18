@@ -99,15 +99,13 @@ def add_tag():
             pass
 
 
-
-
-if __name__ == '__main__':
-
+def old_main():
     add_json_data_to_redis()
     # for i, row in get_redis_words_trans_list().items():
     #     if row['status']:
     #         print(i, row)
     note_ids = get_notes_deck()
+
     ids = []
     for i, note_id in enumerate(note_ids):
 
@@ -132,6 +130,23 @@ if __name__ == '__main__':
         print(i, note_id, Ukrainisch)
 
         invoke('addTags', notes=[note_id], tags='ukr')
-#addTags
 
 
+# addTags
+
+
+if __name__ == '__main__':
+    # print(invoke('deckNames'))
+    deck_name = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
+    note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
+    for i, note_id in enumerate(note_ids):
+        if i > 1000:
+            break
+        # print(i, note_id)
+        note = invoke("notesInfo", notes=[note_id])
+        note_fields = note[0]['fields']
+        # print(note_fields['Part of Speech']['value'])
+        if note_fields['Part of Speech']['value'] == 'verb' and len(note_fields['German']['value'].split(' ')) == 1:
+            print(note_fields['Thing']['value'], note_fields['German']['value'])
+
+    # old_main()

@@ -3,12 +3,12 @@
 import json
 import re
 
-import requests, logging, multiprocessing, datetime
+import requests, multiprocessing
 import redis
 import argparse
 
-from settings import MAX_CONCURRENT_TASKS
-from settings import REQUEST_TIMEOUT, NAME_REDIS_PROXY, TIME_EXPIRE_PROXY_IP, DB_PROXY_RADIS, PORT_PROXY_REDIS
+from config.settings import MAX_CONCURRENT_TASKS
+from config.settings import REQUEST_TIMEOUT, NAME_REDIS_PROXY, DB_PROXY_RADIS, PORT_PROXY_REDIS
 import logging
 
 # Створення об'єкта логування

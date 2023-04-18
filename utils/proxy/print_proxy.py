@@ -1,5 +1,5 @@
 import redis
-from settings import NAME_REDIS_PROXY
+from config.settings import NAME_REDIS_PROXY
 
 
 def print_proxies():
