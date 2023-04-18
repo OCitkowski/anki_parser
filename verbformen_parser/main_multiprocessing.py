@@ -19,6 +19,9 @@ from urllib.parse import urlparse, parse_qs
 
 r = redis.Redis(host='localhost', port=PORT_PROXY_REDIS, db=DB_PROXY_RADIS)
 
+
+
+
 urls_test = ['https://dict.com/ukrainisch-deutsch/zu',
              'https://dict.com/ukrainisch-deutsch/sich',
              'https://dict.com/ukrainisch-deutsch/morgen',

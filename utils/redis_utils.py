@@ -3,6 +3,28 @@ import json
 import redis
 from config.settings import NAME_JSON_WORDS_FILE, PORT_PROXY_REDIS, DB_PROXY_RADIS
 
+
+# verbformen_parser
+def set_to_redis_word_data(id: str, data, port: int, db: int):
+    redis_client = redis.Redis(host='localhost', port=port, db=db)
+    # серіалізація списку у JSON
+    data_json = json.dumps(data)
+    try:
+        redis_client.set(id, data_json)
+    except Exception as ex:
+        print(ex)
+
+
+def get_from_redis_word_data(id: str, port: int, db: int) -> dict:
+    try:
+        redis_client = redis.Redis(host='localhost', port=port, db=db)
+        item = json.load(redis_client.get(id))
+    except Exception as ex:
+        print(ex)
+    return item
+
+
+# *****************************************************
 def get_sorted_rating_proxy_list():
     redis_client = redis.Redis(host='localhost', port=PORT_PROXY_REDIS, db=DB_PROXY_RADIS)
     rating_proxy_list = []

@@ -8,7 +8,7 @@ NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
 NAME_COOKIES_FILE = 'cookies'
 NAME_JSON_WORDS_FILE = 'verbformen_parser/words.json'
-URL = 'https://dict.com/ukrainisch-deutsch/'
+URL = 'https://www.verbformen.de/konjugation/?w='
 TIME_SLEEP = 3
 
 CHROME_OPTIONS = [

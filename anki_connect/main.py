@@ -140,7 +140,7 @@ if __name__ == '__main__':
     deck_name = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
     note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
     for i, note_id in enumerate(note_ids):
-        if i > 1000:
+        if i > 100:
             break
         # print(i, note_id)
         note = invoke("notesInfo", notes=[note_id])
@@ -148,5 +148,6 @@ if __name__ == '__main__':
         # print(note_fields['Part of Speech']['value'])
         if note_fields['Part of Speech']['value'] == 'verb' and len(note_fields['German']['value'].split(' ')) == 1:
             print(note_fields['Thing']['value'], note_fields['German']['value'])
+            print(note_fields)
 
     # old_main()

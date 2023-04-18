@@ -1,32 +1,6 @@
 import json
 import urllib.request
 
-template = [
-    {'Deutsch': ''},
-    {'Ukraine': ''},
-    {'Wortarten': ''},
-    {'Plural_Flexionsformen': ''},
-    {'Bild': ''},
-    {'Beispielsatz I': ''},
-    {'Ukr Beispielsatz I': ''},
-    {'Beispielsatz II': ''},
-    {'Ukr Beispielsatz II': ''},
-    {'Beispielsatz III': ''},
-    {'Ukr Beispielsatz III': ''},
-    {'Beispielsatz IV': ''},
-    {'Ukr Beispielsatz IV': ''},
-    {'Beispielsatz V': ''},
-    {'Ukr Beispielsatz V': ''},
-    {'Beispielsatz VI': ''},
-    {'Ukr Beispielsatz VI': ''},
-    {'Kommentar': ''},
-    {'Zusätzlich': ''},
-    {'Id': ''},
-    {'URL': ''},
-    {'Audio': ''},
-    {'Status': False},
-]
-
 
 def request(action, **params):
     return {'action': action, 'params': params, 'version': 6}
@@ -55,15 +29,4 @@ def get_notes_deck():
 
 
 if __name__ == '__main__':
-    # print(invoke('deckNames'))
-    deck_name = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
-    note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
-    for i, note_id in enumerate(note_ids):
-        if i > 1000:
-            break
-        # print(i, note_id)
-        note = invoke("notesInfo", notes=[note_id])
-        note_fields = note[0]['fields']
-        # print(note_fields['Part of Speech']['value'])
-        if note_fields['Part of Speech']['value'] == 'verb' and len(note_fields['German']['value'].split(' ')) == 1:
-            print(note_fields['Thing']['value'], note_fields['German']['value'])
+    print(invoke('deckNames'))
