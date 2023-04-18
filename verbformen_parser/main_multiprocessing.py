@@ -8,18 +8,16 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
-from config.settings import CHROME_OPTIONS, CSS_SELECTOR, NAME_COOKIES_FILE, \
-    MAX_CONCURRENT_TASKS, TOTAL_TASKS, NAME_JSON_WORDS_FILE
-from dict_parser.utilites import set_cookies_to_browser, \
-    get_urls_from_file, set_to_redis_words_trans_list, save_from_redis_items_to_words, del_empty_row, \
-    get_sorted_rating_proxy_list
+from config.settings import PORT_PROXY_REDIS, DB_PROXY_RADIS, CHROME_OPTIONS, NAME_COOKIES_FILE, MAX_CONCURRENT_TASKS, TOTAL_TASKS
+from utils.redis_utils import set_to_redis_words_trans_list, save_from_redis_items_to_words, del_empty_row, get_sorted_rating_proxy_list
+
+from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
 from handlers.handlers import find_elements_by_css_to_list
 import redis
 
 from urllib.parse import urlparse, parse_qs
 
-r = redis.Redis(host='localhost', port=6379, db=0)
-r.ping()
+r = redis.Redis(host='localhost', port=PORT_PROXY_REDIS, db=DB_PROXY_RADIS)
 
 urls_test = ['https://dict.com/ukrainisch-deutsch/zu',
              'https://dict.com/ukrainisch-deutsch/sich',
@@ -28,7 +26,7 @@ urls_test = ['https://dict.com/ukrainisch-deutsch/zu',
              'https://dict.com/ukrainisch-deutsch/muss',
              'https://dict.com/ukrainisch-deutsch/soll',
              ]
-urls = get_urls_from_file(json_file_words=NAME_JSON_WORDS_FILE, count_items=TOTAL_TASKS)
+urls = []
 
 
 def open_page(args):
