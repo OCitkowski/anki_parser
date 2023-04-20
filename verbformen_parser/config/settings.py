@@ -1,8 +1,12 @@
-MAX_CONCURRENT_TASKS = 20
-TOTAL_TASKS = 1000
+# verbformen
+MAX_CONCURRENT_TASKS = 2
+TOTAL_TASKS = 10
 REQUEST_TIMEOUT = 10
-PORT_PROXY_REDIS = 6379
-DB_PROXY_RADIS = 3
+PORT_REDIS = 6379
+
+DB_PROXY_RADIS = 1
+DB_URLS_RADIS = 3
+
 TIME_EXPIRE_PROXY_IP = 36000
 NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
@@ -10,6 +14,7 @@ NAME_COOKIES_FILE = 'cookies'
 NAME_JSON_WORDS_FILE = 'verbformen_parser/words.json'
 URL = 'https://www.verbformen.de/konjugation/?w='
 TIME_SLEEP = 3
+DONOR_DECK_NAME = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
 
 CHROME_OPTIONS = [
     '--headless',  #: безголовний режим роботи браузера

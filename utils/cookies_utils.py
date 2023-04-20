@@ -14,16 +14,10 @@ def set_cookies_to_browser(driver, cookies_file_name) -> bool:
                 result = True
             except Exception as ex:
                 print(ex)
+        open_cook_file.close()
     except:
         driver.refresh()
         result = False
-
-    finally:
-        try:
-            open_cook_file.close()
-            # print(f'set cookies is {result}')
-        except Exception as ex:
-            print(ex)
 
     return result
 
@@ -37,9 +31,8 @@ def save_cookies_to_file(driver, cookies_file_name) -> bool:
             json.dump(driver.get_cookies(), write_file, ensure_ascii=False)
             result = True
         # print(f'{cookies_file_name}.pkl save to root')
+        write_file.close()
     except Exception as ex:
         print(f'{cookies_file_name}.pkl don`t save to root : {ex}')
-    finally:
-        write_file.close()
 
     return result

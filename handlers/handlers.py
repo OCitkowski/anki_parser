@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from config.settings import CHROME_OPTIONS, NAME_COOKIES_FILE, TIME_SLEEP
-from dict_parser.utilites import set_cookies_to_browser, save_cookies_to_file
+from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
 import logging
 
 # Створення об'єкта логування
