@@ -10,7 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from config.settings import PORT_REDIS, DB_PROXY_RADIS, CHROME_OPTIONS, NAME_COOKIES_FILE, MAX_CONCURRENT_TASKS, \
     TOTAL_TASKS
-from utils.redis_utils import  get_sorted_rating_proxy_list
+from utils.redis_utils import get_sorted_rating_proxy_list
 
 from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
 # from handlers.handlers import find_elements_by_css_to_list
@@ -42,7 +42,6 @@ urls = get_urls_list(TOTAL_TASKS)
 
 
 def open_page(args):
-    proces_number = 1
     url, choice_proxy = args
 
     chrome_options = Options()
@@ -71,26 +70,29 @@ def open_page(args):
                               service=Service(ChromeDriverManager().install()),
                               options=chrome_options)
 
-    driver.get(url)
-    result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
-    logger.info(f'set_cookies_to_browser- {url} // {result}')
+    try:
+        driver.get(url)
+        result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
+        logger.info(f'set_cookies_to_browser- {url} // {result}')
 
-    # found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR)  # todo xpath
-    # print(found_elements)
+        # found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR)  # todo xpath
+        # print(found_elements)
 
-    # parsed_url = urlparse(url)
-    # url_params = parse_qs(parsed_url.query)
+        # parsed_url = urlparse(url)
+        # url_params = parse_qs(parsed_url.query)
 
-    # set_to_redis_words_trans_list(found_elements, url_params)
+        # set_to_redis_words_trans_list(found_elements, url_params)
 
-    random_number = random.randint(3, 5)
-    time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
+        random_number = random.randint(3, 5)
+        time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
 
-    if proces_number == 1:
         save_cookies_to_file(driver, NAME_COOKIES_FILE)
-    proces_number += 1
-    driver.quit()
-    logger.info(f'proces_number -  {proces_number} End - {url} - {choice_proxy} {proces_number}')
+        logger.info(f'End - {url} - {choice_proxy}')
+
+        driver.quit()
+    except Exception as ex:
+
+        logger.error(f'Неочікувана зрада - - {url} - {choice_proxy} / {ex}')
 
 
 if __name__ == '__main__':
