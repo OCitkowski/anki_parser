@@ -11,10 +11,11 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
 from config.settings import PORT_REDIS, DB_PROXY_RADIS, CHROME_OPTIONS, NAME_COOKIES_FILE, MAX_CONCURRENT_TASKS, \
-    TOTAL_TASKS
-from utils.redis_utils import get_sorted_rating_proxy_list
+    TOTAL_TASKS, DB_WORDS_RADIS
+from utils.redis_utils import get_sorted_rating_proxy_list, get_from_redis_word_all_data
 from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
 from anki import get_urls_list
+from handlers.handlers import find_element_s_by_xpath
 
 # Створення об'єкта логування
 logger = logging.getLogger(__name__)
@@ -30,11 +31,23 @@ logger.addHandler(handler)
 
 redis_proxy_client = redis.Redis(host='localhost', port=PORT_REDIS, db=DB_PROXY_RADIS)
 
-urls = get_urls_list(TOTAL_TASKS)
+# urls = get_urls_list(TOTAL_TASKS)
+data = []
+for i, item in enumerate(get_from_redis_word_all_data(port=PORT_REDIS, db=DB_WORDS_RADIS)):
+    if i > TOTAL_TASKS:
+        break
+    data.append(item)
 
 
 def open_page(args):
-    url, choice_proxy = args
+    item = args
+    url = item['URL']
+    id = item['Id']
+    word = item['Deutsch']
+
+    proxies = get_sorted_rating_proxy_list(redis_proxy_client=redis_proxy_client,
+                                           first_rating_proxy=MAX_CONCURRENT_TASKS)
+    choice_proxy = random.choice(proxies)
 
     chrome_options = Options()
     for row in CHROME_OPTIONS:
@@ -67,13 +80,21 @@ def open_page(args):
         result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
         logger.info(f'set_cookies_to_browser- {url} // {result}')
 
-        # found_elements = find_elements_by_css_to_list(driver=driver, css_selector_s=CSS_SELECTOR)  # todo xpath
-        # print(found_elements)
+        selector_I = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
+        elements_I = find_element_s_by_xpath(driver, selector_I)
+        driver.refresh()
+        selector_II = "//*[@lang='uk']/span"
+        elements_II = find_element_s_by_xpath(driver, selector_II)
+        driver.refresh()
+        selector_III = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
+        elements_III = find_element_s_by_xpath(driver, selector_III)
+        driver.refresh()
+        selector_IV = "//*[@id='stammformen']"
+        elements_IV = find_element_s_by_xpath(driver, selector_IV)
+        print(id, word, elements_I, elements_II, elements_III, elements_IV)
 
-        # parsed_url = urlparse(url)
-        # url_params = parse_qs(parsed_url.query)
 
-        # set_to_redis_words_trans_list(found_elements, url_params)
+
 
         random_number = random.randint(3, 5)
         time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
@@ -93,9 +114,7 @@ if __name__ == '__main__':
 
     try:
         pool = Pool(processes=MAX_CONCURRENT_TASKS)  # запускаємо не більше n процесів одночасно
-
-        proxies = get_sorted_rating_proxy_list(redis_proxy_client)
-        pool.map(open_page, zip(urls, proxies))
+        pool.map(open_page, data)
         pool.close()
         pool.join()
     except Exception as ex:

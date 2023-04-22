@@ -1,6 +1,6 @@
 from utils.anki_utils import invoke
-from utils.redis_utils import get_from_redis_word_data, set_to_redis_word_data
-from config.settings import PORT_REDIS, DB_URLS_RADIS, URL, DONOR_DECK_NAME
+from utils.redis_utils import get_from_redis_word_data, set_to_redis_word_data, get_from_redis_word_all_data
+from config.settings import PORT_REDIS, DB_WORDS_RADIS, URL, DONOR_DECK_NAME
 
 template = {
     'Deutsch': '',
@@ -58,8 +58,7 @@ def get_verb_data():
     note_ids = get_deck_note_ids(deck_name=DONOR_DECK_NAME)
 
     for i, note_id in enumerate(note_ids):
-        if i > 100:
-            break
+
         note = get_deck_note(note_id=note_id)
         note_fields = note[0]['fields']
 
@@ -84,15 +83,20 @@ def get_urls_list(count_urls: int = 0) -> list:
     data = get_verb_data()
 
     for i, row in enumerate(data):
-        if i < count_urls:
-            set_to_redis_word_data(id=row['Id'], data=row, port=PORT_REDIS, db=DB_URLS_RADIS)
-            r_row = get_from_redis_word_data(id=row['Id'], port=PORT_REDIS, db=DB_URLS_RADIS)
-            urls.append(r_row['URL'])
+        if count_urls != 0 and i > count_urls:
+            break
+
+        set_to_redis_word_data(id=row['Id'], data=row, port=PORT_REDIS, db=DB_WORDS_RADIS)
+        r_row = get_from_redis_word_data(id=row['Id'], port=PORT_REDIS, db=DB_WORDS_RADIS)
+        urls.append(r_row['URL'])
 
     return urls
 
 
 if __name__ == '__main__':
-    urls = get_urls_list()
-    for i, url in enumerate(urls):
-        print(i, url)
+    # urls = get_urls_list()
+    # for i, url in enumerate(urls):
+    #     print(i, url)
+
+    for i , item in enumerate(get_from_redis_word_all_data(port=PORT_REDIS, db=DB_WORDS_RADIS)):
+        print(i, item)

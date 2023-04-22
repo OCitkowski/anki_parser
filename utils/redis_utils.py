@@ -41,9 +41,21 @@ def get_from_redis_word_data(id: str, port: int, db: int) -> dict:
         logger.error(f'get from redis client - Неочікувана зрада - / {ex}')
     return item
 
+def get_from_redis_word_all_data(port: int, db: int) -> dict:
+    redis_client = redis.Redis(host='localhost', port=port, db=db)
+    keys = redis_client.keys()
+    data_list = []
+
+    for key in keys:
+        item_json = redis_client.get(key)
+        data_list.append(json.loads(item_json))
+
+    return data_list
+
+
 
 # *****************************************************
-def get_sorted_rating_proxy_list(redis_proxy_client=None):
+def get_sorted_rating_proxy_list(redis_proxy_client=None, first_rating_proxy = None):
     if redis_proxy_client == None:
         return None
 
@@ -64,8 +76,12 @@ def get_sorted_rating_proxy_list(redis_proxy_client=None):
 
     try:
         sorted_rating_list = sorted(rating_proxy_list, key=lambda x: (-x[1] + x[2], -x[1]))
-        for i in sorted_rating_list:
-            sorted_rating_proxy_list.append(i[0])
+        for i, proxy in enumerate(sorted_rating_list):
+
+            if first_rating_proxy != None and i > first_rating_proxy:
+                break
+
+            sorted_rating_proxy_list.append(proxy[0])
         return sorted_rating_proxy_list
     except Exception as ex:
         logger.error(f'get_sorted_rating_proxy_list - Неочікувана зрада - / {ex}')

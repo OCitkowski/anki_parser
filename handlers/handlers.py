@@ -22,7 +22,6 @@ logger.addHandler(handler)
 
 
 def find_element_s_by_xpath(driver, xpatch_selector: str) -> list:
-
     try:
         elements = driver.find_elements(By.XPATH, xpatch_selector)  #
         found_elements = [element.text for element in elements]
@@ -57,7 +56,7 @@ def parse_word(elements) -> list:
 
 if __name__ == '__main__':
     domen = 'https://www.verbformen.de/deklination/substantive/?w='
-    # domen = 'https://www.verbformen.de/konjugation/beispiele/arbeiten.htm'
+    # domen = 'https://www.verbformen.de/konjugation/beispiele/arbeiten.html'
 
     urls_test = [
         f"{domen}gehen",
@@ -86,17 +85,13 @@ if __name__ == '__main__':
             selector_II = "//*[@lang='uk']/span"
             elements_II = find_element_s_by_xpath(driver, selector_II)
             driver.refresh()
-            selector_III = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
-            elements_III = find_element_s_by_xpath(driver, selector_III)
             driver.refresh()
             selector_IV = "//*[@id='stammformen']"
             elements_IV = find_element_s_by_xpath(driver, selector_IV)
+            print(elements_I, elements_II, elements_IV)
 
-
-            save_cookies_to_file(driver=driver, cookies_file_name=NAME_COOKIES_FILE)
-
-            print(elements_I, elements_II, elements_III, elements_IV)
+            # save_cookies_to_file(driver=driver, cookies_file_name=NAME_COOKIES_FILE)
 
         except Exception as ex:
             print(ex)
-            save_cookies_to_file(driver=driver, cookies_file_name=NAME_COOKIES_FILE)
+            # save_cookies_to_file(driver=driver, cookies_file_name=NAME_COOKIES_FILE)
