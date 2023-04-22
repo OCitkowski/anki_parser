@@ -85,13 +85,11 @@ def open_page(args):
         driver.refresh()
         selector_II = "//*[@lang='uk']/span"
         elements_II = find_element_s_by_xpath(driver, selector_II)
-        driver.refresh()
-        selector_III = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
-        elements_III = find_element_s_by_xpath(driver, selector_III)
+
         driver.refresh()
         selector_IV = "//*[@id='stammformen']"
         elements_IV = find_element_s_by_xpath(driver, selector_IV)
-        print(id, word, elements_I, elements_II, elements_III, elements_IV)
+        print(id, word, elements_I, elements_II,  elements_IV)
 
 
 
@@ -99,7 +97,7 @@ def open_page(args):
         random_number = random.randint(3, 5)
         time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
 
-        save_cookies_to_file(driver, NAME_COOKIES_FILE)
+        # save_cookies_to_file(driver, NAME_COOKIES_FILE)
         logger.info(f'End - {url} - {choice_proxy}')
 
         driver.quit()
