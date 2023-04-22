@@ -1,9 +1,11 @@
 import random
 import time
+import redis
+import logging
 from multiprocessing import Pool
+
 from selenium import webdriver
 from selenium.webdriver.common.proxy import *
-
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -11,28 +13,18 @@ from webdriver_manager.chrome import ChromeDriverManager
 from config.settings import PORT_REDIS, DB_PROXY_RADIS, CHROME_OPTIONS, NAME_COOKIES_FILE, MAX_CONCURRENT_TASKS, \
     TOTAL_TASKS
 from utils.redis_utils import get_sorted_rating_proxy_list
-
 from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
-# from handlers.handlers import find_elements_by_css_to_list
-import redis
-
-from urllib.parse import urlparse, parse_qs
 from anki import get_urls_list
-
-import logging
 
 # Створення об'єкта логування
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
 # Створення обробника, який буде записувати логи в файл
 handler = logging.FileHandler('verbformen.log')
 handler.setLevel(logging.INFO)
-
 # Створення форматувальника логів
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
-
 # Додавання обробника до логера
 logger.addHandler(handler)
 
