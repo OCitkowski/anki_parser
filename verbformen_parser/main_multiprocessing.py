@@ -1,3 +1,5 @@
+# https://pypi.org/project/selenium-recaptcha-solver/
+
 import random
 import time
 import redis
@@ -71,34 +73,34 @@ def open_page(args):
 
         logger.info(f'Run localhost- {url} // {choice_proxy} failed')
 
+
     driver = webdriver.Chrome(desired_capabilities=capabilities,
                               service=Service(ChromeDriverManager().install()),
                               options=chrome_options)
 
     try:
+        random_number = random.randint(3, 5)
+
         driver.get(url)
+
         result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
         logger.info(f'set_cookies_to_browser- {url} // {result}')
-
+        time.sleep(random_number)
         selector_I = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
         elements_I = find_element_s_by_xpath(driver, selector_I)
         driver.refresh()
+        time.sleep(random_number)
         selector_II = "//*[@lang='uk']/span"
         elements_II = find_element_s_by_xpath(driver, selector_II)
-
         driver.refresh()
+        time.sleep(random_number)
         selector_IV = "//*[@id='stammformen']"
         elements_IV = find_element_s_by_xpath(driver, selector_IV)
-        print(id, word, elements_I, elements_II,  elements_IV)
 
-
-
-
-        random_number = random.randint(3, 5)
         time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
 
-        # save_cookies_to_file(driver, NAME_COOKIES_FILE)
-        logger.info(f'End - {url} - {choice_proxy}')
+        save_cookies_to_file(driver, NAME_COOKIES_FILE)
+        logger.info(f'End - {url} - {choice_proxy} // {id} {elements_I} {elements_II} {elements_IV}')
 
         driver.quit()
     except Exception as ex:

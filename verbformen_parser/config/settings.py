@@ -1,6 +1,6 @@
 # verbformen
-MAX_CONCURRENT_TASKS = 5
-TOTAL_TASKS = 20
+MAX_CONCURRENT_TASKS = 2
+TOTAL_TASKS = 100
 REQUEST_TIMEOUT = 10
 PORT_REDIS = 6379
 
@@ -17,7 +17,7 @@ TIME_SLEEP = 3
 DONOR_DECK_NAME = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
 
 CHROME_OPTIONS = [
-    '--headless',  #: безголовний режим роботи браузера
+    # '--headless',  #: безголовний режим роботи браузера
 
     "--user-data-dir=/home/fox/.config/google-chrome", # chrome://version/  #https://habr.com/ru/articles/442034/
     "--profile-directory=Default",
