@@ -1,5 +1,3 @@
-# run
-# python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25
 import json
 import re
 
@@ -7,8 +5,8 @@ import requests, multiprocessing
 import redis
 import argparse
 
-from config.settings import MAX_CONCURRENT_TASKS
-from config.settings import REQUEST_TIMEOUT, NAME_REDIS_PROXY, DB_PROXY_RADIS, PORT_PROXY_REDIS
+from settings import MAX_CONCURRENT_TASKS
+from settings import REQUEST_TIMEOUT, NAME_REDIS_PROXY, DB_PROXY_RADIS, PORT_PROXY_REDIS
 import logging
 
 # Створення об'єкта логування
@@ -49,8 +47,6 @@ def get_proxis_from_txt(filename, count_proxy: int = None):
     except Exception as ex:
         logger.error(f'Failed / {ex}')
 
-    finally:
-        f.close()
     return proxies
 
 
@@ -87,14 +83,23 @@ def get_key_proxy(proxy: str) -> 'key':
     return re.sub(r'\D', '', proxy)
 
 
-def set_rating_proxy(new_proxy, key):
-    # rating - [proxy, check_count, failed_connect_count]
+def set_rating_proxy_old(new_proxy, key):
+    # rating - [proxy, check_count, failed_connect_count, last_connect]
     item = new_proxy.rstrip('\n')
     if item != None and item != '':
-        rating_proxy = [item, 0, 0]
+        rating_proxy = [item, 0, 0, True]
         item_proxy_json = json.dumps(rating_proxy)
         redis_client.set(key, item_proxy_json)
         logging.info(f"Key -{key} / Proxy - {new_proxy} set rating!")
+
+
+def set_rating_proxy(new_proxy, key):
+
+    item = new_proxy.rstrip('\n')
+    rating_proxy = [item, 0, 0, True]
+    item_proxy_json = json.dumps(rating_proxy)
+    redis_client.set(key, item_proxy_json)
+    logging.info(f"Key -{key} / Proxy - {new_proxy} set rating!")
 
 
 def get_rating_proxy(key):
@@ -110,6 +115,10 @@ def update_rating_proxy(key, failed_connect=False):
     rating_proxy[1] += 1
     if failed_connect:
         rating_proxy[2] += 1  # failed_connect_count
+        rating_proxy[3] = False  # failed last_connect
+    else:
+        rating_proxy[3] = True  # ok last_connect
+
     item_proxy_json = json.dumps(rating_proxy)
     redis_client.set(key, item_proxy_json)
 
@@ -153,7 +162,7 @@ def print_proxies():
 if __name__ == '__main__':
 
     descStr = "For find real proxy " \
-              "&  python3 verbformen_parser/proxy_multiprocessing.py -free_proxy_txt 'verbformen_parser/free_proxy.txt' -max_concurrent_tasks 25"
+              "&  python3 utils/proxy/proxy_multiprocessing.py -free_proxy_txt 'utils/proxy/free_proxy.txt' -max_concurrent_tasks 25"
     parser = argparse.ArgumentParser(description=descStr)
     parser.add_argument('-free_proxy_txt', dest='FreeProxyTxt', required=False)
     parser.add_argument('-max_concurrent_tasks', dest='MAX_CONCURRENT_TASKS', required=False)

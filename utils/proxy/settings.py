@@ -1,23 +1,18 @@
-# verbformen
-MAX_CONCURRENT_TASKS = 5
-TOTAL_TASKS = 100
+MAX_CONCURRENT_TASKS = 20
+TOTAL_TASKS = 1000
 REQUEST_TIMEOUT = 10
-PORT_REDIS = 6379
-
+PORT_PROXY_REDIS = 6379
 DB_PROXY_RADIS = 1
-DB_WORDS_RADIS = 3
-
 TIME_EXPIRE_PROXY_IP = 36000
 NAME_REDIS_PROXY = 'check_proxy_list'
 NAME_REDIS_WORDS = 'translate_words'
 NAME_COOKIES_FILE = 'cookies'
 NAME_JSON_WORDS_FILE = 'verbformen_parser/words.json'
-URL = 'https://www.verbformen.de/konjugation/?w='
+URL = 'https://dict.com/ukrainisch-deutsch/'
 TIME_SLEEP = 3
-DONOR_DECK_NAME = 'Deutsch: 4000 German Words by Frequency - WD Updated 5 Feb 2023'
 
 CHROME_OPTIONS = [
-    # '--headless',  #: безголовний режим роботи браузера
+    '--headless',  #: безголовний режим роботи браузера
 
     "--user-data-dir=/home/fox/.config/google-chrome", # chrome://version/  #https://habr.com/ru/articles/442034/
     "--profile-directory=Default",
@@ -65,4 +60,11 @@ CHROME_OPTIONS = [
     #: встановити користувацький рядок агента
 ]
 
-
+CSS_SELECTOR = (
+    "span.lex_ful_tran",
+    "span.lex_ful_entr.l1",
+    "span.lex_ful_pron",
+    "span.lex_ful_morf",
+    "span.lex_ful_form",
+    "span.lex_ftx_sens"
+)

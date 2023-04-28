@@ -41,7 +41,7 @@ for i, item in enumerate(get_from_redis_word_all_data(port=PORT_REDIS, db=DB_WOR
     data.append(item)
 
 
-def open_page(args):
+def open_page_old(args):
     item = args
     url = item['URL']
     id = item['Id']
@@ -79,38 +79,54 @@ def open_page(args):
                               options=chrome_options)
 
     try:
-        random_number = random.randint(3, 5)
+        random_number = random.randint(3, 10)
 
         driver.get(url)
+        print(url, choice_proxy)
 
-        result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
-        logger.info(f'set_cookies_to_browser- {url} // {result}')
-        time.sleep(random_number)
-        selector_I = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
-        elements_I = find_element_s_by_xpath(driver, selector_I)
-        driver.refresh()
-        time.sleep(random_number)
-        selector_II = "//*[@lang='uk']/span"
-        elements_II = find_element_s_by_xpath(driver, selector_II)
-        driver.refresh()
-        time.sleep(random_number)
-        selector_IV = "//*[@id='stammformen']"
-        elements_IV = find_element_s_by_xpath(driver, selector_IV)
+        # result = set_cookies_to_browser(driver, NAME_COOKIES_FILE)
+        # logger.info(f'set_cookies_to_browser- {url} // {result}')
+        # time.sleep(random_number)
+        # selector_I = "//*[@id='vVdBxBox']/p[(contains(@class,'rInf'))]"
+        # elements_I = find_element_s_by_xpath(driver, selector_I)
+        # driver.refresh()
+        # time.sleep(random_number)
+        # selector_II = "//*[@lang='uk']/span"
+        # elements_II = find_element_s_by_xpath(driver, selector_II)
+        # driver.refresh()
+        # time.sleep(random_number)
+        # selector_IV = "//*[@id='stammformen']"
+        # elements_IV = find_element_s_by_xpath(driver, selector_IV)
 
         time.sleep(random_number)  # чекаємо random_number секунд, щоб сторінка повністю завантажилась
 
         save_cookies_to_file(driver, NAME_COOKIES_FILE)
-        logger.info(f'End - {url} - {choice_proxy} // {id} {elements_I} {elements_II} {elements_IV}')
+        # logger.info(f'End - {url} - {choice_proxy} // {id} {elements_I} {elements_II} {elements_IV}')
 
         driver.quit()
     except Exception as ex:
 
         logger.error(f'Неочікувана зрада - - {url} - {choice_proxy} / {ex}')
 
+def open_page(args):
+    item = args
+    url = item['URL']
+    id = item['Id']
+    word = item['Deutsch']
+
+    proxies = get_sorted_rating_proxy_list(redis_proxy_client=redis_proxy_client,
+                                           first_rating_proxy=MAX_CONCURRENT_TASKS)
+    choice_proxy = random.choice(proxies)
+    print(id, url, choice_proxy)
+
+
 
 if __name__ == '__main__':
     # run
     # python3 anki_parser/proxy_multiprocessing.py -free_proxy_txt 'anki_parser/free_proxy.txt' -max_concurrent_tasks 10
+    for i in data:
+        print(i)
+
 
     try:
         pool = Pool(processes=MAX_CONCURRENT_TASKS)  # запускаємо не більше n процесів одночасно
