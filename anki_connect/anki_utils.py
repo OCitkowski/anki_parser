@@ -38,12 +38,28 @@ def add_note_to_deck(deutsch, ukr, deck_name, modelName):
     return result
 
 
+def get_notes_info(deck_name):
+    result = invoke('findNotes', query=f'deck:"{deck_name}" ')
+    return result
+
+
 def get_notes_deck():
     result = invoke('deckNames')
     deck_name = result[1]
     note_ids = invoke('findNotes', query=f'deck:"{deck_name}"')
 
     return note_ids
+
+
+def retrieve_audio_file(filename):
+    # filename = 'sound:google-85d48e18-99878f31-b3944b13-31678411-6325f384.mp3'
+    audio_data = invoke('retrieveMedia', filename=filename)
+    if audio_data:
+        with open(filename, 'wb') as audio_file:
+            audio_file.write(audio_data)
+        print(f"Аудіофайл {filename} отримано та збережено на диск.")
+    else:
+        print(f"Не вдалося отримати аудіофайл {filename}.")
 
 
 if __name__ == '__main__':
