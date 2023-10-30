@@ -21,6 +21,23 @@ def invoke(action, **params):
     return response['result']
 
 
+def add_note_to_deck(deutsch, ukr, deck_name, modelName):
+    # Спочатку створіть нотатку з необхідними полями та колодою
+    note_data = {
+        'deckName': deck_name,
+        'modelName': modelName,
+        'fields': {
+            'Deutsch': deutsch,
+            'Ukr': ukr
+        }
+    }
+    result = invoke('addNote', note=note_data)
+    print(result)
+
+    # Поверніть ідентифікатор нової нотатки
+    return result
+
+
 def get_notes_deck():
     result = invoke('deckNames')
     deck_name = result[1]
