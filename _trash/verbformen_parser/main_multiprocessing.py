@@ -14,10 +14,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from config.settings import PORT_REDIS, DB_PROXY_RADIS, CHROME_OPTIONS, NAME_COOKIES_FILE, MAX_CONCURRENT_TASKS, \
     TOTAL_TASKS, DB_WORDS_RADIS
-from utils.redis_utils import get_sorted_rating_proxy_list, get_from_redis_word_all_data
-from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
-from anki import get_urls_list
-from handlers.handlers import find_element_s_by_xpath
+from _trash.utils import get_sorted_rating_proxy_list, get_from_redis_word_all_data
+from _trash.utils import save_cookies_to_file
 
 # Створення об'єкта логування
 logger = logging.getLogger(__name__)

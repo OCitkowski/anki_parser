@@ -8,8 +8,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import redis
 
-from config.settings import CHROME_OPTIONS
-from dict_parser import save_cookies_to_file, set_cookies_to_browser
+from _trash.config.settings import CHROME_OPTIONS
+from _trash.dict_parser import save_cookies_to_file, set_cookies_to_browser
 
 urls = ['https://www.verbformen.ru/sklonenie/sushhestvitelnye/Heft.htm',
         'https://www.verbformen.ru/sklonenie/sushhestvitelnye/?w=hallen',

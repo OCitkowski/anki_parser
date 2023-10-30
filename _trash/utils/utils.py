@@ -1,5 +1,5 @@
 import json, os
-from config.settings import URL
+from _trash.config.settings import URL
 
 
 # urls

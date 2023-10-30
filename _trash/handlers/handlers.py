@@ -4,8 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from config.settings import CHROME_OPTIONS, NAME_COOKIES_FILE, TIME_SLEEP
-from utils.cookies_utils import set_cookies_to_browser, save_cookies_to_file
+from _trash.config.settings import CHROME_OPTIONS, NAME_COOKIES_FILE, TIME_SLEEP
+from _trash.utils.cookies_utils import set_cookies_to_browser
 import logging
 
 # Створення об'єкта логування

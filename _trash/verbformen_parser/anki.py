@@ -1,5 +1,5 @@
-from utils.anki_utils import invoke
-from utils.redis_utils import get_from_redis_word_data, set_to_redis_word_data, get_from_redis_word_all_data
+from anki_connect.anki_utils import invoke
+from _trash.utils import get_from_redis_word_data, set_to_redis_word_data, get_from_redis_word_all_data
 from config.settings import PORT_REDIS, DB_WORDS_RADIS, URL, DONOR_DECK_NAME
 
 template = {
