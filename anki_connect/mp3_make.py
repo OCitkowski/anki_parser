@@ -1,6 +1,6 @@
 import os
 import re
-from anki_utils import invoke, get_notes_info, retrieve_audio_file
+from anki_utils import invoke, get_notes_info
 
 deck_name = 'Satze'
 model_name = 'Satze'  # Вкажіть модель, яку ви використовуєте в Anki
@@ -8,7 +8,7 @@ output_directory = 'audio_files'  # Папка, де зберігатимуть�
 
 
 def retrieve_audio_file():
-    filename = 'sound:google-85d48e18-99878f31-b3944b13-31678411-6325f384.mp3'
+    filename = 'google-85d48e18-99878f31-b3944b13-31678411-6325f384.mp3'
     audio_data = invoke('retrieveMedia', filename=filename)
     if audio_data:
         with open(filename, 'wb') as audio_file:
